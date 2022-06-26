@@ -93,6 +93,19 @@ const signInButtonStyles = css`
 //   border: 1px solid #000000;
 // `;
 
+const createAccountStyles = css`
+  color: #000000;
+  /* position: absolute; */
+  width: 200px;
+  height: 18px;
+  left: 283px;
+  top: 647px;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+`;
+
 export default function Hero() {
   return (
     <div css={heroStyle}>
@@ -102,7 +115,7 @@ export default function Hero() {
           <input placeholder="password" css={passwordInputStyles} />
           <button css={signInButtonStyles}>Sign In</button>
         </div>
-        {/* <hr css={lineStyles} /> */}
+        <p css={createAccountStyles}>Don't have an account yet?</p>
         <div>
           <button css={createButtonStyles}>Create new account</button>
         </div>

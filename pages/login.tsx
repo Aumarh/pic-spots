@@ -1,6 +1,6 @@
 import Hero from '../components/Hero';
 
-export default function SignIn() {
+export default function LogIn() {
   return (
     <div>
       <Hero />

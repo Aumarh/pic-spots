@@ -7,7 +7,8 @@ exports.up = async (sql) => {
 			spot_name VARCHAR(100) NOT NULL,
 			location_id INT NOT NULL,
 			post_timestamp TIMESTAMP NOT NULL,
-			post_description VARCHAR(255) NOT NULL
+			post_description VARCHAR(255) NOT NULL,
+			username varchar(30) NOT NULL
     )
 		`;
 };

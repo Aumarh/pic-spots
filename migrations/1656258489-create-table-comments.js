@@ -3,7 +3,7 @@ exports.up = async (sql) => {
     CREATE TABLE comments (
       id SERIAL PRIMARY KEY,
 			user_id INT NOT NULL,
-			content VARCHAR(255) NOT NULL,
+			content VARCHAR(255),
 			post_id INT NOT NULL,
 			post_timestamp TIMESTAMP NOT NULL
     )

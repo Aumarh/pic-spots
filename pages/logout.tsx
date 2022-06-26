@@ -14,7 +14,7 @@ const linkStyles = css`
   text-decoration: none;
 `;
 
-export default function SignOut() {
+export default function LogOut() {
   return (
     <div>
       <Head>
