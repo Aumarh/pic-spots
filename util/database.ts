@@ -33,10 +33,7 @@ const sql = connectOneTimeToDatabase();
 
 export type User = {
   id: number;
-  first_name: string;
-  last_name: string;
   username: string;
-  password_hash: string;
 };
 
 export type UserWithPasswordHash = User & {
@@ -94,4 +91,49 @@ export async function createUser(
   `;
 
   return camelCaseKeys(user);
+}
+
+export async function getUserByUsername(username: string) {
+  if (!username) return undefined;
+
+  const [user] = await sql<[User | undefined]>`
+  SELECT
+    id,
+    username
+  FROM
+    users
+  WHERE
+    username = ${username}
+  `;
+
+  return user && camelCaseKeys(user);
+}
+
+export async function getUserById(userId: number) {
+  if (!userId) return undefined;
+
+  const [user] = await sql<[User | undefined]>`
+    SELECT
+      id,
+      username
+    FROM
+      users
+    WHERE
+      id = ${userId}
+  `;
+  return user && camelCaseKeys(user);
+}
+
+export async function getUserWithPasswordHashByUsername(username: string) {
+  if (!username) return undefined;
+
+  const [user] = await sql<[UserWithPasswordHash | undefined]>`
+    SELECT
+     *
+    FROM
+      users
+    WHERE
+      username = ${username}
+  `;
+  return user && camelCaseKeys(user);
 }

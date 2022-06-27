@@ -3,7 +3,7 @@ exports.up = async (sql) => {
     CREATE TABLE posts (
       id SERIAL PRIMARY KEY,
 			profile_id INT NOT NULL,
-			picture_url INT NOT NULL,
+			picture_url VARCHAR (255) NOT NULL,
 			spot_name VARCHAR(100) NOT NULL,
 			location_id INT NOT NULL,
 			post_timestamp TIMESTAMP NOT NULL,

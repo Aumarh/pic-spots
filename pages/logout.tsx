@@ -29,7 +29,7 @@ export default function LogOut() {
       <main>
         <h1 css={appNameStyles}>See you next time.</h1>
         <Button variant="contained">
-          <Link href="/sign_in" css={linkStyles}>
+          <Link href="/login" css={linkStyles}>
             Sign in
           </Link>
         </Button>

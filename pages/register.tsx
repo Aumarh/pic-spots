@@ -1,5 +1,8 @@
 import { css } from '@emotion/react';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { RegisterResponseBody } from './api/register';
 
 const heroStyle = css`
   background: url('heroimage.jpeg');
@@ -8,7 +11,6 @@ const heroStyle = css`
   height: 982px;
   left: 0px;
   top: 0px;
-
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -27,13 +29,12 @@ const loginBannerStyles = css`
   background: #d9d9d9;
   mix-blend-mode: screen;
   border: 1px solid #000000;
-
   > div {
     margin-left: 55px;
     margin-top: 50px;
   }
 `;
-const usernameInputStyles = css`
+export const usernameInputStyles = css`
   /* position: absolute; */
   left: 17.33%;
   right: 63.56%;
@@ -45,7 +46,7 @@ const usernameInputStyles = css`
   color: #000000;
 `;
 
-const passwordInputStyles = css`
+export const passwordInputStyles = css`
   width: 191px;
   /* position: absolute; */
   left: 17.33%;
@@ -59,7 +60,6 @@ const passwordInputStyles = css`
 
 const createAccountButtonStyles = css`
   /* Button */
-
   /* position: absolute; */
   left: 17.33%;
   right: 63.56%;
@@ -67,7 +67,6 @@ const createAccountButtonStyles = css`
   bottom: 24.21%;
   width: 199px;
   background: #1bd290;
-
   border-radius: 2px;
   color: #000000;
 `;
@@ -94,11 +93,21 @@ const lastNameInputStyles = css`
   border-radius: 2px;
 `;
 
+export const errorStyles = css`
+  color: red;
+`;
+
 export default function Register() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState<
+    {
+      message: string;
+    }[]
+  >([]);
+  const router = useRouter();
 
   async function registerHandler() {
     // event.preventDefault();
@@ -112,60 +121,83 @@ export default function Register() {
         password: password,
       }),
     });
-    const registerResponseBody = await registerResponse.json();
+    const registerResponseBody: RegisterResponseBody =
+      await registerResponse.json();
     console.log(registerResponseBody);
+
+    // handling the errors from the server with an error message
+    if ('errors' in registerResponseBody) {
+      setErrors(registerResponseBody.errors);
+      return;
+    }
+    // if no errors, redirect to the login page
+    await router.push('/');
   }
   return (
-    <div css={heroStyle}>
-      <div css={loginBannerStyles}>
-        <div>
-          <label>
-            First name:
-            <input
-              value={firstName}
-              onChange={(event) => setFirstName(event.currentTarget.value)}
-              placeholder="first_name"
-              css={firstNameInputStyles}
-            />
-          </label>
-          <br />
-          <label>
-            Last name:
-            <input
-              value={lastName}
-              onChange={(event) => setLastName(event.currentTarget.value)}
-              placeholder="last_name"
-              css={lastNameInputStyles}
-            />
-          </label>
-          <br />
-          <label>
-            User name:
-            <input
-              value={username}
-              onChange={(event) => setUsername(event.currentTarget.value)}
-              placeholder="username"
-              css={usernameInputStyles}
-            />
-          </label>
-          <br />
-          <label>
-            Password:
-            <input
-              onChange={(event) => setPassword(event.currentTarget.value)}
-              value={password}
-              placeholder="password"
-              css={passwordInputStyles}
-            />
-          </label>
-          <button
-            onClick={() => registerHandler}
-            css={createAccountButtonStyles}
-          >
-            Create account
-          </button>
+    <div>
+      <Head>
+        <title>Register</title>
+        <meta name="register" content="Register a new user" />
+      </Head>
+      <main>
+        <h1>register</h1>
+        <div css={heroStyle}>
+          <div css={loginBannerStyles}>
+            <div>
+              <label>
+                First name:
+                <input
+                  value={firstName}
+                  onChange={(event) => setFirstName(event.currentTarget.value)}
+                  placeholder="first_name"
+                  css={firstNameInputStyles}
+                />
+              </label>
+              <br />
+              <label>
+                Last name:
+                <input
+                  value={lastName}
+                  onChange={(event) => setLastName(event.currentTarget.value)}
+                  placeholder="last_name"
+                  css={lastNameInputStyles}
+                />
+              </label>
+              <br />
+              <label>
+                User name:
+                <input
+                  value={username}
+                  onChange={(event) => setUsername(event.currentTarget.value)}
+                  placeholder="username"
+                  css={usernameInputStyles}
+                />
+              </label>
+              <br />
+              <label>
+                Password:
+                <input
+                  onChange={(event) => setPassword(event.currentTarget.value)}
+                  value={password}
+                  placeholder="password"
+                  css={passwordInputStyles}
+                />
+              </label>
+              <button
+                onClick={() => registerHandler()}
+                css={createAccountButtonStyles}
+              >
+                Create account
+              </button>
+              {errors.map((error) => (
+                <div css={errorStyles} key={`error-${error.message}`}>
+                  {error.message}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
