@@ -27,14 +27,14 @@ const headerGrowStyles = css`
   }
 `;
 
-export default function Header() {
+export default function Header(props) {
   return (
     <div css={navBarStyles}>
       <div position="static" css={brandStyles}>
         <div css={headerGrowStyles}>
           <Link href="/">PicSpots</Link>
           <Link href="/users/private-profile">
-            <AccountCircleIcon />
+            <AccountCircleIcon {...(props.user && props.user.username)} />
           </Link>
           <Link href="/logout">Sign out</Link>
         </div>

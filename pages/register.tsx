@@ -97,7 +97,10 @@ export const errorStyles = css`
   color: red;
 `;
 
-export default function Register() {
+type Props = {
+  refreshUserProfile: () => Promise<void>;
+};
+export default function Register(props: Props) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
@@ -130,8 +133,27 @@ export default function Register() {
       setErrors(registerResponseBody.errors);
       return;
     }
-    // if no errors, redirect to the login page
-    await router.push('/');
+
+    const returnTo = router.query.returnTo;
+
+    if (
+      returnTo &&
+      !Array.isArray(returnTo) &&
+      // Security: Validate returnTo parameter against valid path
+      // (because this is untrusted user input)
+      /^\/[a-zA-Z0-9-?=/]*$/.test(returnTo)
+
+      // returnTo
+    ) {
+      await props.refreshUserProfile();
+      await router.push(returnTo);
+    } else {
+      // redirect to /profile
+
+      // await router.push(`/users/${loginResponseBody.user.id}`);
+      await props.refreshUserProfile();
+      await router.push('/');
+    }
   }
   return (
     <div>

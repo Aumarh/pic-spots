@@ -8,7 +8,7 @@ const mainStyles = css`
   min-height: 82vh;
 `;
 
-export default function Layout({ children, props }) {
+export default function Layout(props) {
   return (
     <div>
       <Head>
@@ -19,8 +19,8 @@ export default function Layout({ children, props }) {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header />
-      <Container css={mainStyles}>{children}</Container>
+      <Header user={props.user} refreshUserProfile={props.refreshUserProfile} />
+      <Container css={mainStyles}>{props.children}</Container>
       <Footer />
     </div>
   );

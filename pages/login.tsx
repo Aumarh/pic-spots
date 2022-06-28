@@ -93,11 +93,11 @@ const createAccountStyles = css`
   line-height: 22px;
 `;
 
-// type Props = {
-//   refreshUserProfile: () => Promise<void>;
-// };
+type Props = {
+  refreshUserProfile: () => Promise<void>;
+};
 
-export default function Login() {
+export default function Login(props: Props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<
@@ -136,13 +136,13 @@ export default function Login() {
 
       // returnTo
     ) {
-      // await props.refreshUserProfile();
+      await props.refreshUserProfile();
       await router.push(returnTo);
     } else {
       // redirect to /profile
-      // await router.push('/');
+
       // await router.push(`/users/${loginResponseBody.user.id}`);
-      // await props.refreshUserProfile();
+      await props.refreshUserProfile();
       await router.push('/');
     }
   }

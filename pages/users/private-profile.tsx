@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Layout from '../../components/Layout';
-import { getUserById, User } from '../../util/database';
+import { getUserByValidSessionToken, User } from '../../util/database';
 
 const appNameStyles = css`
   font-family: 'Allura', cursive;
@@ -11,21 +11,21 @@ const appNameStyles = css`
   text-align: center;
 `;
 
-type Props = { user?: User };
+type Props = { user: User };
 
 export default function PrivateProfile(props: Props) {
-  if (!props.user) {
-    return (
-      <>
-        <Head>
-          <title>User not found</title>
-          <meta name="description" content="User not found" />
-        </Head>
-        <h1>404 - User not found</h1>
-        Better luck next time
-      </>
-    );
-  }
+  // if (!props.user) {
+  //   return (
+  //     <>
+  //       <Head>
+  //         <title>User not found</title>
+  //         <meta name="description" content="User not found" />
+  //       </Head>
+  //       <h1>404 - User not found</h1>
+  //       Better luck next time
+  //     </>
+  //   );
+  // }
 
   return (
     <div>
@@ -49,16 +49,22 @@ export default function PrivateProfile(props: Props) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const user = await getUserById(1);
+  const user = await getUserByValidSessionToken(
+    context.req.cookies.sessionToken,
+  );
 
-  if (!user) {
-    context.res.statusCode = 404;
-    return { props: {} };
+  if (user) {
+    return {
+      props: {
+        user: user,
+      },
+    };
   }
 
   return {
-    props: {
-      user: user,
+    redirect: {
+      destination: '/login?returnTo=/users/private-profile',
+      permanent: false,
     },
   };
 }

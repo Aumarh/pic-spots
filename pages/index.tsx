@@ -1,6 +1,8 @@
 import { css } from '@emotion/react';
 import Head from 'next/head';
+import { useEffect } from 'react';
 import Layout from '../components/Layout';
+import { getUserByValidSessionToken } from '../util/database';
 
 const appNameStyles = css`
   font-family: 'Allura', cursive;
@@ -9,7 +11,16 @@ const appNameStyles = css`
   text-align: center;
 `;
 
-export default function Home() {
+type Props = {
+  refreshUserProfile: () => Promise<void>;
+};
+export default function Home(props: Props) {
+  useEffect(() => {
+    props
+      .refreshUserProfile()
+      .catch(() => console.log('refresh user profile failed'));
+  }, [props]);
+
   return (
     <div>
       <Head>
@@ -27,4 +38,23 @@ export default function Home() {
       </Layout>
     </div>
   );
+}
+
+export async function getServerSideProps(context: any) {
+  const user = await getUserByValidSessionToken(
+    context.req.cookies.sessionToken,
+  );
+
+  if (user) {
+    return {
+      props: {},
+    };
+  }
+
+  return {
+    redirect: {
+      destination: '/login?returnTo=/',
+      permanent: false,
+    },
+  };
 }
