@@ -1,7 +1,12 @@
+import crypto from 'node:crypto';
 // import crypto from 'node:crypto';
 import bcrypt from 'bcrypt';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getUserWithPasswordHashByUsername } from '../../util/database';
+import { createSerializedRegisterSessionTokenCookie } from '../../util/cookies';
+import {
+  createSession,
+  getUserWithPasswordHashByUsername,
+} from '../../util/database';
 
 export type LoginResponseBody =
   | {
@@ -55,12 +60,22 @@ export default async function handler(
 
     const userId = userWithPasswordHashUseWithCaution.id;
 
-    res.status(200).json({ user: { id: userId } });
-  } else {
-    res
-      .status(401)
-      .json({ errors: [{ message: 'Username or password does not match' }] });
+    // create a session token for the user
+    const token = crypto.randomBytes(80).toString('base64');
 
-    // const userId = userWithPasswordHashUseWithCaution.id;
+    // save the token to the database
+    const session = await createSession(token, userId);
+
+    const serializedCookie = await createSerializedRegisterSessionTokenCookie(
+      session.token,
+    );
+
+    res
+      .status(200)
+      // Tells the browser to create the cookie for us
+      .setHeader('set-Cookie', serializedCookie)
+      .json({ user: { id: userId } });
+  } else {
+    res.status(405).json({ errors: [{ message: 'method does not match' }] });
   }
 }

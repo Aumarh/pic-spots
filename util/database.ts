@@ -43,9 +43,9 @@ export type UserWithPasswordHash = User & {
 type Session = {
   id: number;
   token: string;
-  userId: number;
-  expiry_timestamp: Date;
-  csrf_token: string;
+  // expiryTimestamp: Date;
+  // userId: number;
+  // csrf_token: string;
 };
 
 export type Profile = {
@@ -136,4 +136,24 @@ export async function getUserWithPasswordHashByUsername(username: string) {
       username = ${username}
   `;
   return user && camelCaseKeys(user);
+}
+
+export async function createSession(
+  token: string,
+  userId: User['id'],
+  // CSRFSecret: string,
+) {
+  const [session] = await sql<[Session]>`
+  INSERT INTO sessions
+    (token, user_id)
+  VALUES
+    (${token}, ${userId})
+  RETURNING
+    id,
+    token
+  `;
+
+  // await deleteExpiredSessions();
+
+  return camelCaseKeys(session);
 }

@@ -141,9 +141,9 @@ export default function Login() {
     } else {
       // redirect to /profile
       // await router.push('/');
-      await router.push(`/users/${loginResponseBody.user.id}`);
+      // await router.push(`/users/${loginResponseBody.user.id}`);
       // await props.refreshUserProfile();
-      // await router.push('/');
+      await router.push('/');
     }
   }
 

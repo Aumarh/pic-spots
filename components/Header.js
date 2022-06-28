@@ -33,7 +33,7 @@ export default function Header() {
       <div position="static" css={brandStyles}>
         <div css={headerGrowStyles}>
           <Link href="/">PicSpots</Link>
-          <Link href="/">
+          <Link href="/users/private-profile">
             <AccountCircleIcon />
           </Link>
           <Link href="/logout">Sign out</Link>
