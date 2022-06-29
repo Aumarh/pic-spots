@@ -43,7 +43,7 @@ export type UserWithPasswordHash = User & {
 type Session = {
   id: number;
   token: string;
-  csrf_token: string;
+  csrfToken: string;
   // expiryTimestamp: Date;
   // userId: number;
 };
@@ -57,13 +57,13 @@ export type Profile = {
 
 export type Post = {
   id: number;
-  userId: number;
+  // userId: number;
   image: string;
-  spot_name: string;
-  post_description: string;
-  location_id: number;
-  post_timestamp: Date;
-  username: string;
+  spotName: string;
+  postDescription: string;
+  locationId: number;
+  postTimestamp: Date;
+  postTags: string[];
 };
 
 export type Comment = {
@@ -71,12 +71,13 @@ export type Comment = {
   userId: number;
   postId: number;
   comment: string;
-  post_timestamp: Date;
+  username: string;
+  postTimestamp: Date;
 };
 
 export async function createUser(
-  first_name: string,
-  last_name: string,
+  firstName: string,
+  lastName: string,
   username: string,
   passwordHash: string,
 ) {
@@ -84,7 +85,7 @@ export async function createUser(
   INSERT INTO users
     (first_name, last_name, username, password_hash)
   VALUES
-    (${first_name}, ${last_name}, ${username}, ${passwordHash})
+    (${firstName}, ${lastName}, ${username}, ${passwordHash})
   RETURNING
     id,
     username
@@ -167,7 +168,7 @@ export async function getValidSessionByToken(token: string) {
   SELECT
     sessions.id,
     sessions.token,
-    sessions.csrf_secret
+    sessions.csrf_seed
   FROM
     sessions
   WHERE
@@ -223,4 +224,198 @@ export async function deleteExpiredSessions() {
   `;
 
   return sessions.map((session) => camelcaseKeys(session));
+}
+
+export async function createPost(
+  userId: number,
+  image: string,
+  spotName: string,
+  postDescription: string,
+  locationId: number,
+  postTags: string[],
+) {
+  const [post] = await sql<[Post]>`
+  INSERT INTO posts
+    (user_id, image, spot_name, post_description, location_id, post_tags)
+  VALUES
+    (${userId}, ${image}, ${spotName}, ${postDescription}, ${locationId}, ${postTags})
+  RETURNING
+    id,
+    image,
+    spot_name,
+    post_description,
+    location_id,
+    post_tags,
+    post_timestamp
+  `;
+
+  return camelcaseKeys(post);
+}
+
+// GET ALL POSTS
+export async function getPosts() {
+  const posts = await sql<[Post[]]>`
+  SELECT
+    *
+  FROM
+    posts
+  `;
+
+  return posts.map((post) => camelcaseKeys(post));
+}
+
+// GET POST BY ID
+export async function getPostById(postId: number) {
+  const [post] = await sql<[Post | undefined]>`
+  SELECT
+    id,
+    image,
+    spot_name,
+    post_description,
+    location_id,
+    post_tags
+   FROM
+    posts
+   WHERE
+    id = ${postId}
+   `;
+
+  return post && camelcaseKeys(post);
+}
+
+export async function getPostsByUserId(userId: number) {
+  const posts = await sql<[Post[]]>`
+  SELECT
+    *
+  FROM
+    posts
+  WHERE
+    user_id = ${userId}
+  `;
+
+  return posts.map((post) => camelcaseKeys(post));
+}
+
+export async function getPostsByLocationId(locationId: number) {
+  const posts = await sql<[Post[]]>`
+  SELECT
+    *
+  FROM
+    posts
+  WHERE
+    location_id = ${locationId}
+  `;
+
+  return posts.map((post) => camelcaseKeys(post));
+}
+
+export async function getPostsByTag(tag: string) {
+  const posts = await sql<[Post[]]>`
+  SELECT
+    *
+  FROM
+    posts
+  WHERE
+    post_tags @> ARRAY[${tag}]
+  `;
+
+  return posts.map((post) => camelcaseKeys(post));
+}
+
+export async function updatePostById(
+  postId: number,
+  image: string,
+  spotName: string,
+  postDescription: string,
+  locationId: number,
+  postTags: string[],
+) {
+  const [post] = await sql<[Post]>`
+  UPDATE
+    posts
+  SET
+    image = ${image},
+    spot_name = ${spotName},
+    post_description = ${postDescription},
+    location_id = ${locationId},
+    post_tags = ${postTags}
+  WHERE
+    id = ${postId}
+  RETURNING
+    id,
+    image,
+    spot_name,
+    post_description,
+    location_id,
+    post_tags,
+    post_timestamp
+  `;
+
+  return camelcaseKeys(post);
+}
+
+// Delete post by id
+export async function deletePostByPostId(postId: number) {
+  const [post] = await sql<[Post | undefined]>`
+  DELETE FROM
+    posts
+  WHERE
+    id = ${postId}
+  RETURNING
+   *
+  `;
+
+  return post && camelcaseKeys(post);
+}
+
+// Create comments
+export async function createComment(
+  userId: number,
+  postId: number,
+  commentText: string,
+  username: string,
+) {
+  const [comment] = await sql<[Comment]>`
+  INSERT INTO comments
+    (user_id, post_id, comment_text, username)
+  VALUES
+    (${userId}, ${postId}, ${commentText}, ${username})
+  RETURNING
+    id,
+    user_id,
+    post_id,
+    comment_text,
+    username,
+    comment_timestamp
+  `;
+
+  return camelcaseKeys(comment);
+}
+
+// Get comments by post id
+export async function getCommentsByPostId(postId: number) {
+  const comments = await sql<[Comment[]]>`
+  SELECT
+    *
+  FROM
+    comments
+  WHERE
+    post_id = ${postId}
+  `;
+
+  return comments.map((comment) => camelcaseKeys(comment));
+}
+
+// Delete comment by id
+export async function deleteCommentById(commentId: number) {
+  const [comment] = await sql<[Comment | undefined]>`
+  DELETE FROM
+    comments
+  WHERE
+    id = ${commentId}
+  RETURNING
+   *
+  `;
+
+  return comment && camelcaseKeys(comment);
 }

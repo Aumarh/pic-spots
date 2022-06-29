@@ -1,7 +1,9 @@
 import { css } from '@emotion/react';
+import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { getValidSessionByToken } from '../util/database';
 import { RegisterResponseBody } from './api/register';
 
 const heroStyle = css`
@@ -222,4 +224,44 @@ export default function Register(props: Props) {
       </main>
     </div>
   );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  // Redirect from HTTP to HTTPS on Heroku
+  if (
+    context.req.headers.host &&
+    context.req.headers['x-forwarded-proto'] &&
+    context.req.headers['x-forwarded-proto'] !== 'https'
+  ) {
+    return {
+      redirect: {
+        destination: `https://${context.req.headers.host}/register`,
+        permanent: true,
+      },
+    };
+  }
+
+  // 1. check if there is a token and if it is valid from the cookie
+  const token = context.req.cookies.sessionToken;
+
+  if (token) {
+    // 2. check if the token is valid and redirect
+    const session = await getValidSessionByToken(token);
+
+    if (session) {
+      console.log(session);
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false,
+        },
+      };
+    }
+  }
+
+  // 3. Otherwise, generate CSRF token and render the page
+
+  return {
+    props: {},
+  };
 }

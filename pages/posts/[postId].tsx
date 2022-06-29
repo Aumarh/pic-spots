@@ -2,8 +2,12 @@ import { css } from '@emotion/react';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Layout from '../../components/Layout';
-import { createCsrfToken } from '../../util/auth';
-import { getUserById, getValidSessionByToken, User } from '../../util/database';
+import {
+  getCommentsByPostId,
+  getPostById,
+  getUserByValidSessionToken,
+  Post,
+} from '../../util/database';
 
 const appNameStyles = css`
   font-family: 'Allura', cursive;
@@ -12,30 +16,32 @@ const appNameStyles = css`
   text-align: center;
 `;
 
-type Props = { user?: User };
+type Props = {
+  refreshUserProfile: () => void;
+  userObject: { spotName: string; image: string };
+  post: Post;
 
-export default function UserDetails(props: Props) {
+  postComments: {
+    id: number;
+    userId: number;
+    postId: number;
+    commentText: string;
+    username: string;
+    image: string;
+  }[];
+  id: number;
+  username: string;
+};
+
+export default function PostDetails(props: Props) {
   if ('errors' in props) {
     return <h1>Not authenticated to view this page</h1>;
-  }
-
-  if (!props.user) {
-    return (
-      <>
-        <Head>
-          <title>User not found</title>
-          <meta name="description" content="User not found" />
-        </Head>
-        <h1>404 - User not found</h1>
-        Better luck next time
-      </>
-    );
   }
 
   return (
     <div>
       <Head>
-        <title>{props.user.username}</title>
+        <title>{props.username}</title>
         <meta
           name="description"
           content="Pic Spot is an web app that helps folks new to Vienna find picture perfect spots around Vienna"
@@ -44,9 +50,9 @@ export default function UserDetails(props: Props) {
       </Head>
       <Layout>
         <main>
-          <h1 css={appNameStyles}>User #{props.user.username}</h1>
-          <div>id: {props.user.id}</div>
-          <div>username: {props.user.username}</div>
+          <h1 css={appNameStyles}>User #{props.post.spotName}</h1>
+          <div>id: {props.post.id}</div>
+          <div>username: {props.post.spotName}</div>
         </main>
       </Layout>
     </div>
@@ -63,36 +69,36 @@ export default function UserDetails(props: Props) {
 // by Next.js
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const userIdFromUrl = context.query.userId;
-
-  // const userId = context.query.userId;
-  // const posts = await getPostsByUserId(Number(userId));
+  const postIdFromUrl = context.query.postId;
+  const sessionToken = context.req.cookies.sessionToken;
+  const loggedInUser = await getUserByValidSessionToken(sessionToken);
 
   // checking that the user param is a string
-  if (!userIdFromUrl || Array.isArray(userIdFromUrl)) {
+  if (!postIdFromUrl || Array.isArray(postIdFromUrl)) {
     return { props: {} };
   }
 
-  const user = await getUserById(parseInt(userIdFromUrl));
+  const post = await getPostById(parseInt(postIdFromUrl));
 
-  if (!user) {
+  if (!postIdFromUrl) {
     context.res.statusCode = 404;
     return { props: {} };
   }
-  const sessionToken = context.req.cookies.sessionToken;
-  const session = await getValidSessionByToken(sessionToken);
 
-  if (!session) {
+  if (!loggedInUser) {
     return {
       props: {
-        error: "You're not authenticated",
+        error: 'You need to be logged in',
       },
     };
   }
-  const csrfToken = await createCsrfToken(session.csrfSecret);
+  const postComments = await getCommentsByPostId(parseInt(postIdFromUrl));
   return {
     props: {
-      csrfToken: csrfToken,
+      post: post,
+      postId: postIdFromUrl,
+      userId: loggedInUser.id,
+      postComments: postComments,
     },
   };
 }

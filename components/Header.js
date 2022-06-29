@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Icon from '@mui/material/Icon';
 import Link from 'next/link';
 
 const brandStyles = css`
@@ -35,6 +36,9 @@ export default function Header(props) {
           <Link href="/">PicSpots</Link>
           <Link href="/users/private-profile">
             <AccountCircleIcon {...(props.user && props.user.username)} />
+          </Link>
+          <Link href="/upload">
+            <Icon sx={{ fontSize: 30 }}>+</Icon>
           </Link>
           <Link href="/logout">Sign out</Link>
         </div>
