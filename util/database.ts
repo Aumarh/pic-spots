@@ -252,6 +252,26 @@ export async function createPost(
   return camelcaseKeys(post);
 }
 
+export async function createLocation(
+  userId: number,
+  spotName: string,
+  latitude: number,
+  longitude: number,
+) {
+  const [location] = await sql<[Post]>`
+  INSERT INTO locations
+    (user_id, spot_name, latitude, longitude)
+  VALUES
+    (${userId},  ${spotName}, ${longitude}, ${latitude})
+  RETURNING
+    id,
+    latitude,
+    longitude
+  `;
+
+  return camelcaseKeys(location);
+}
+
 // GET ALL POSTS
 export async function getPosts() {
   const posts = await sql<[Post[]]>`
