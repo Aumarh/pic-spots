@@ -39,9 +39,10 @@ export default function PrivateProfile(props: Props) {
       </Head>
       <Layout>
         <main>
-          <h1 css={appNameStyles}>User #{props.user.username}</h1>
-          <div>id: {props.user.id}</div>
+          <h1 css={appNameStyles}>@{props.user.username}</h1>
+
           <div>username: {props.user.username}</div>
+          <div>bio: {props.user.bio}</div>
         </main>
       </Layout>
     </div>

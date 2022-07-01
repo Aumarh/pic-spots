@@ -24,14 +24,18 @@ export default async function handler(
   // check the method post
   if (req.method === 'POST') {
     if (
-      typeof req.body.first_name !== 'string' ||
-      typeof req.body.last_name !== 'string' ||
+      typeof req.body.firstName !== 'string' ||
+      typeof req.body.lastName !== 'string' ||
       typeof req.body.username !== 'string' ||
       typeof req.body.password !== 'string' ||
-      !req.body.first_name ||
-      !req.body.last_name ||
+      typeof req.body.bio !== 'string' ||
+      typeof req.body.hero_image !== 'string' ||
+      !req.body.firstName ||
+      !req.body.lastName ||
       !req.body.username ||
-      !req.body.password
+      !req.body.password ||
+      !req.body.bio ||
+      !req.body.heroImage
     ) {
       res
         .status(401)
@@ -50,10 +54,12 @@ export default async function handler(
 
     // create the user
     const newUser = await createUser(
-      req.body.first_name,
-      req.body.last_name,
+      req.body.firstName,
+      req.body.lastName,
       req.body.username,
       passwordHash,
+      req.body.bio,
+      req.body.heroImage,
     );
 
     // create a session token for the user

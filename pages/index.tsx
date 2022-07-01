@@ -43,12 +43,12 @@ export default function Home(props: Props) {
                 <img
                   src={`${item.img}?w=248&fit=crop&auto=format`}
                   srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                  alt={item.title}
+                  alt={item.spotName}
                   loading="lazy"
                 />
                 <ImageListItemBar
-                  title={item.location}
-                  subtitle={<span>by: {item.author}</span>}
+                  title={item.spotName}
+                  subtitle={item.location}
                   position="below"
                 />
               </ImageListItem>
@@ -81,73 +81,64 @@ export async function getServerSideProps(context: any) {
 
 const itemData = [
   {
-    img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    title: 'Breakfast',
-    author: '@bkristastucchio',
-    location: 'schlacthaugasse',
+    img: 'https://res.cloudinary.com/cscorner/image/upload/v1656667358/whmrdctrojuvwiup1dqh.jpg',
+    spotName: 'Prata',
+    location: '1020 Wien',
   },
   {
-    img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    title: 'Burger',
-    author: '@rollelflex_graphy726',
-    location: 'schlacthaugasse',
+    img: 'https://res.cloudinary.com/cscorner/image/upload/v1656667358/whmrdctrojuvwiup1dqh.jpg',
+    spotName: 'Prata',
+    location: '1020 Wien',
   },
   {
-    img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-    title: 'Camera',
-    author: '@helloimnik',
+    img: 'https://res.cloudinary.com/cscorner/image/upload/v1656667358/whmrdctrojuvwiup1dqh.jpg',
+    spotName: 'Prata',
+    location: '1020 Wien',
   },
   {
-    img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-    title: 'Coffee',
-    author: '@nolanissac',
-    location: 'schlacthaugasse',
+    img: 'https://res.cloudinary.com/cscorner/image/upload/v1656668800/wdwjgkuhgmi2wacxv1ej.jpg',
+    spotName: 'Jubilaumswarte',
+    location: 'Johann-Staud-Straße',
   },
   {
-    img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-    title: 'Hats',
-    author: '@hjrc33',
-    location: 'schlacthaugasse',
+    img: 'https://res.cloudinary.com/cscorner/image/upload/v1656668800/wdwjgkuhgmi2wacxv1ej.jpg',
+    spotName: 'Jubilaumswarte',
+    location: 'Johann-Staud-Straße',
   },
   {
-    img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-    title: 'Honey',
-    author: '@arwinneil',
+    img: 'https://res.cloudinary.com/cscorner/image/upload/v1656668800/wdwjgkuhgmi2wacxv1ej.jpg',
+    spotName: 'Jubilaumswarte',
+    location: 'Johann-Staud-Straße',
   },
   {
-    img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-    title: 'Basketball',
-    author: '@tjdragotta',
-    location: 'schlacthaugasse',
+    img: 'https://res.cloudinary.com/cscorner/image/upload/v1656683383/ezsn98jyncewezsnvhwe.jpg',
+    spotName: 'Prata',
+    location: '1020 Wien',
   },
   {
-    img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-    title: 'Fern',
-    author: '@katie_wasserman',
-    location: 'schlacthaugasse',
+    img: 'https://res.cloudinary.com/cscorner/image/upload/v1656683383/ezsn98jyncewezsnvhwe.jpg',
+    spotName: 'Prata',
+    location: '1020 Wien',
   },
   {
-    img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-    title: 'Mushrooms',
-    author: '@silverdalex',
-    location: 'schlacthaugasse',
+    img: 'https://res.cloudinary.com/cscorner/image/upload/v1656683383/ezsn98jyncewezsnvhwe.jpg',
+    spotName: 'Prata',
+    location: '1020 Wien',
   },
   {
-    img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-    title: 'Tomato basil',
-    author: '@shelleypauls',
-    location: 'schlacthaugasse',
+    img: 'https://res.cloudinary.com/cscorner/image/upload/v1656669044/vflfntpqyk45pn7sdxyo.jpg',
+    spotName: 'Belvedere',
+    location: 'Prinz Eugen-Straße',
   },
   {
-    img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-    title: 'Sea star',
-    author: '@peterlaster',
-    location: 'schlacthaugasse',
+    img: 'https://res.cloudinary.com/cscorner/image/upload/v1656684132/pn5vgslzdulqoo8qk9dx.jpg',
+    spotName: 'Prata',
+    location: '1020 Wien',
+    Tags: '#outdoor',
   },
-  {
-    img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-    title: 'Bike',
-    author: '@southside_customs',
-    location: 'schlacthaugasse',
-  },
+  // {
+  //   img: 'https://res.cloudinary.com/cscorner/image/upload/v1656669044/vflfntpqyk45pn7sdxyo.jpg',
+  //   spotName: 'Belvedere',
+  //   location: 'Prinz Eugen-Straße',
+  // },
 ];

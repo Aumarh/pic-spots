@@ -45,8 +45,8 @@ export default function UserDetails(props: Props) {
       <Layout>
         <main>
           <h1 css={appNameStyles}>User #{props.user.username}</h1>
-          <div>id: {props.user.id}</div>
           <div>username: {props.user.username}</div>
+          <div>Bio: {props.user.bio}</div>
         </main>
       </Layout>
     </div>
@@ -89,7 +89,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
     };
   }
-  const csrfToken = await createCsrfToken(session.csrfSecret);
+  const csrfToken = createCsrfToken(session.csrfSeed);
   return {
     props: {
       csrfToken: csrfToken,

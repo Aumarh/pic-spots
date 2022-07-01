@@ -34,6 +34,7 @@ const sql = connectOneTimeToDatabase();
 export type User = {
   id: number;
   username: string;
+  bio: string;
 };
 
 export type UserWithPasswordHash = User & {
@@ -43,7 +44,7 @@ export type UserWithPasswordHash = User & {
 type Session = {
   id: number;
   token: string;
-  csrfToken: string;
+  csrfSeed: string;
   // expiryTimestamp: Date;
   // userId: number;
 };
@@ -57,8 +58,9 @@ export type Profile = {
 
 export type Post = {
   id: number;
-  // userId: number;
-  image: string;
+  userId: number;
+  username: string;
+  pictureUrl: string;
   spotName: string;
   postDescription: string;
   locationId: number;
@@ -80,12 +82,14 @@ export async function createUser(
   lastName: string,
   username: string,
   passwordHash: string,
+  bio: string,
+  heroImage: string,
 ) {
   const [user] = await sql<[User]>`
   INSERT INTO users
-    (first_name, last_name, username, password_hash)
+    (first_name, last_name, username, password_hash, bio, hero_image)
   VALUES
-    (${firstName}, ${lastName}, ${username}, ${passwordHash})
+    (${firstName}, ${lastName}, ${username}, ${passwordHash}, ${bio}, ${heroImage})
   RETURNING
     id,
     username
@@ -228,7 +232,7 @@ export async function deleteExpiredSessions() {
 
 export async function createPost(
   userId: number,
-  image: string,
+  pictureUrl: string,
   spotName: string,
   postDescription: string,
   locationId: number,
@@ -236,12 +240,12 @@ export async function createPost(
 ) {
   const [post] = await sql<[Post]>`
   INSERT INTO posts
-    (user_id, image, spot_name, post_description, location_id, post_tags)
+    (user_id, picture_url, spot_name, post_description, location_id, post_tags)
   VALUES
-    (${userId}, ${image}, ${spotName}, ${postDescription}, ${locationId}, ${postTags})
+    (${userId}, ${pictureUrl}, ${spotName}, ${postDescription}, ${locationId}, ${postTags})
   RETURNING
     id,
-    image,
+    picture_url,
     spot_name,
     post_description,
     location_id,
@@ -289,7 +293,7 @@ export async function getPostById(postId: number) {
   const [post] = await sql<[Post | undefined]>`
   SELECT
     id,
-    image,
+    picture_url,
     spot_name,
     post_description,
     location_id,

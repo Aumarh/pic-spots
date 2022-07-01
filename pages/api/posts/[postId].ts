@@ -38,7 +38,7 @@ export default async function postHandler(
     const postFromRequest = request.body.post;
     const updatedPost = await updatePostById(
       postId,
-      postFromRequest.image,
+      postFromRequest.pictureUrl,
       postFromRequest.spotName,
       postFromRequest.postDescription,
       postFromRequest.locationId,

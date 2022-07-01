@@ -174,6 +174,7 @@ export default function Login(props: Props) {
               <label>
                 password:{' '}
                 <input
+                  type="password"
                   placeholder="password"
                   css={passwordInputStyles}
                   value={password}

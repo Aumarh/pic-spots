@@ -1,8 +1,10 @@
 import { css } from '@emotion/react';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { createCsrfToken } from '../util/auth';
 import { getValidSessionByToken } from '../util/database';
 import { RegisterResponseBody } from './api/register';
 
@@ -98,21 +100,42 @@ const lastNameInputStyles = css`
 export const errorStyles = css`
   color: red;
 `;
+type Errors = { message: string }[];
 
 type Props = {
   refreshUserProfile: () => Promise<void>;
+  csrfToken: string;
+  cloudinaryAPI: string;
 };
 export default function Register(props: Props) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState<
-    {
-      message: string;
-    }[]
-  >([]);
+  const [bio, setBio] = useState('');
+  const [heroImage, setHeroImage] = useState('');
+  const [errors, setErrors] = useState<Errors>([]);
   const router = useRouter();
+
+  const uploadImage = async (event: any) => {
+    const files = event.currentTarget.files;
+    const formData = new FormData();
+    formData.append('file', files[0]);
+    formData.append('upload_preset', 'uploads');
+    // setLoading(true);
+
+    const response = await fetch(
+      `	https://api.cloudinary.com/v1_1/${props.cloudinaryAPI}/image/upload`,
+      {
+        method: 'POST',
+        body: formData,
+      },
+    );
+    const file = await response.json();
+
+    setHeroImage(file.heroImage_url);
+    // setLoading(false);
+  };
 
   async function registerHandler() {
     // event.preventDefault();
@@ -124,6 +147,9 @@ export default function Register(props: Props) {
         last_name: lastName,
         username: username,
         password: password,
+        bio: bio,
+        heroImage: heroImage,
+        csrfToken: props.csrfToken,
       }),
     });
     const registerResponseBody: RegisterResponseBody =
@@ -168,7 +194,7 @@ export default function Register(props: Props) {
         <div css={heroStyle}>
           <div css={loginBannerStyles}>
             <div>
-              <label>
+              <div>
                 First name:
                 <input
                   value={firstName}
@@ -176,9 +202,9 @@ export default function Register(props: Props) {
                   placeholder="first_name"
                   css={firstNameInputStyles}
                 />
-              </label>
+              </div>
               <br />
-              <label>
+              <div>
                 Last name:
                 <input
                   value={lastName}
@@ -186,9 +212,9 @@ export default function Register(props: Props) {
                   placeholder="last_name"
                   css={lastNameInputStyles}
                 />
-              </label>
+              </div>
               <br />
-              <label>
+              <div>
                 User name:
                 <input
                   value={username}
@@ -196,17 +222,39 @@ export default function Register(props: Props) {
                   placeholder="username"
                   css={usernameInputStyles}
                 />
-              </label>
+              </div>
               <br />
-              <label>
+              <div>
                 Password:
                 <input
+                  type="password"
                   onChange={(event) => setPassword(event.currentTarget.value)}
                   value={password}
                   placeholder="password"
                   css={passwordInputStyles}
                 />
-              </label>
+              </div>
+              <br />
+              <div>
+                Bio:
+                <textarea
+                  value={bio}
+                  placeholder="add a short bio"
+                  onChange={(event) => setBio(event.currentTarget.value)}
+                />
+              </div>
+              <br />
+              <div>
+                <input type="file" onChange={uploadImage} />
+              </div>
+              <br />
+              <div>
+                <img
+                  src={heroImage}
+                  alt="user hero pic"
+                  style={{ height: '100px', width: '100px' }}
+                />
+              </div>
               <button
                 onClick={() => registerHandler()}
                 css={createAccountButtonStyles}
@@ -259,9 +307,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   }
 
+  const cloudinaryAPI = process.env.CLOUDINARY_NAME;
   // 3. Otherwise, generate CSRF token and render the page
 
   return {
-    props: {},
+    props: {
+      // csrfToken: createCsrfToken(secret),
+      cloudinaryAPI,
+    },
   };
 }

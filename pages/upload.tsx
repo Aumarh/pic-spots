@@ -1,87 +1,171 @@
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
+import { GetServerSidePropsContext } from 'next';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import Layout from '../components/Layout';
+import { getUserByValidSessionToken } from '../util/database';
+import { UploadResponseBody } from './api/upload';
 
-export default function TitlebarBelowImageList() {
+type Props = {
+  refreshUserProfile: () => void;
+  userObject: { username: string };
+  cloudinaryAPI: string;
+  userId: number;
+  username: string;
+};
+
+export default function Upload(props: Props) {
+  const [pictureUrl, setPictureUrl] = useState('/white.png');
+  const [spotName, setSpotName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [spotDescription, setSpotDescription] = useState('');
+  const [location, setLocation] = useState('');
+  const [postTag, setPostTag] = useState('');
+
+  const router = useRouter();
+
+  const uploadImage = async (event: any) => {
+    const files = event.currentTarget.files;
+    const formData = new FormData();
+    formData.append('file', files[0]);
+    formData.append('upload_preset', 'uploads');
+    setLoading(true);
+
+    const response = await fetch(
+      `	https://api.cloudinary.com/v1_1/${props.cloudinaryAPI}/image/upload`,
+      {
+        method: 'POST',
+        body: formData,
+      },
+    );
+    const file = await response.json();
+
+    setPictureUrl(file.secure_url);
+    setLoading(false);
+  };
+
   return (
-    <ImageList sx={{ width: 700, height: 450 }}>
-      {itemData.map((item) => (
-        <ImageListItem key={item.img}>
-          <img
-            src={`${item.img}?w=248&fit=crop&auto=format`}
-            srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-            alt={item.title}
-            loading="lazy"
-          />
-          <ImageListItemBar
-            title={item.title}
-            subtitle={<span>by: {item.author}</span>}
-            position="below"
-          />
-        </ImageListItem>
-      ))}
-    </ImageList>
+    <div>
+      <Layout userObject={props.userObject}>
+        <Head>
+          <title>Upload</title>
+
+          <meta name="Homepage" content="Homepage" />
+        </Head>
+
+        <div>
+          <h1>Upload new spots</h1>
+        </div>
+
+        <div>
+          <div>
+            <form
+              onSubmit={async (event) => {
+                event.preventDefault();
+                const uploadResponse = await fetch('/api/upload', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    userId: props.userId,
+                    pictureUrl: pictureUrl,
+                    spotName: spotName,
+                    spotDescription: spotDescription,
+                    location: location,
+                    postTag: postTag,
+                    username: props.username,
+                  }),
+                });
+
+                const uploadResponseBody =
+                  (await uploadResponse.json()) as UploadResponseBody;
+
+                console.log('uploadResponseBody', uploadResponseBody);
+
+                props.refreshUserProfile();
+                // redirect to user profile after upload
+                await router.push(`/users/private-profile`);
+              }}
+            >
+              <div>
+                <input type="file" onChange={uploadImage} />
+
+                <div>
+                  {loading ? (
+                    <div>
+                      <img src="/loading.gif" alt="loading" />
+                    </div>
+                  ) : (
+                    <img
+                      src={pictureUrl}
+                      alt="preview"
+                      style={{ height: '500px', width: '500px' }}
+                    />
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <div>
+                  <input
+                    placeholder="add title"
+                    value={spotName}
+                    onChange={(event) => setSpotName(event.currentTarget.value)}
+                  />
+                </div>
+                <div>
+                  <textarea
+                    placeholder="add description"
+                    value={spotDescription}
+                    onChange={(event) =>
+                      setSpotDescription(event.currentTarget.value)
+                    }
+                  />
+                </div>
+                <div>
+                  <input
+                    placeholder="location"
+                    value={location}
+                    onChange={(event) => setLocation(event.currentTarget.value)}
+                  />
+                </div>
+                <div>
+                  <input
+                    placeholder="add spot tags"
+                    value={postTag}
+                    onChange={(event) => setPostTag(event.currentTarget.value)}
+                  />
+                </div>
+                <div>
+                  <button>Upload</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </Layout>
+    </div>
   );
 }
-const itemData = [
-  {
-    img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    title: 'Breakfast',
-    author: '@bkristastucchio',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    title: 'Burger',
-    author: '@rollelflex_graphy726',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-    title: 'Camera',
-    author: '@helloimnik',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-    title: 'Coffee',
-    author: '@nolanissac',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-    title: 'Hats',
-    author: '@hjrc33',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-    title: 'Honey',
-    author: '@arwinneil',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-    title: 'Basketball',
-    author: '@tjdragotta',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-    title: 'Fern',
-    author: '@katie_wasserman',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-    title: 'Mushrooms',
-    author: '@silverdalex',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-    title: 'Tomato basil',
-    author: '@shelleypauls',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-    title: 'Sea star',
-    author: '@peterlaster',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-    title: 'Bike',
-    author: '@southside_customs',
-  },
-];
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const cloudinaryAPI = process.env.CLOUDINARY_NAME;
+  const sessionToken = context.req.cookies.sessionToken;
+  const session = await getUserByValidSessionToken(sessionToken);
+
+  if (!session) {
+    return {
+      props: {
+        error: 'You need to be logged in!',
+      },
+    };
+  }
+  return {
+    props: {
+      cloudinaryAPI,
+      userId: session.id,
+      username: session.username,
+    },
+  };
+}

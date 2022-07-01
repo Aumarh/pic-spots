@@ -6,8 +6,8 @@ exports.up = async (sql) => {
 			last_name VARCHAR(80) NOT NULL,
       username VARCHAR(80) UNIQUE NOT NULL,
 			password_hash VARCHAR (80) NOT NULL,
-      bio VARCHAR(255) NOT NULL,
-      hero_image VARCHAR(255) NOT NULL
+      bio VARCHAR(255),
+      hero_image VARCHAR(255)
     )
 		`;
 };
