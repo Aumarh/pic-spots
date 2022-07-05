@@ -1,8 +1,26 @@
 import { css } from '@emotion/react';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DeleteIcon from '@mui/icons-material/Delete';
+import {
+  Button,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Grid,
+  Typography,
+} from '@mui/material';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import Layout from '../../components/Layout';
-import { getUserByValidSessionToken, User } from '../../util/database';
+import {
+  getPostsByUserId,
+  getUserByValidSessionToken,
+  Post,
+  User,
+} from '../../util/database';
 
 const appNameStyles = css`
   font-family: 'Allura', cursive;
@@ -11,7 +29,14 @@ const appNameStyles = css`
   text-align: center;
 `;
 
-type Props = { user: User };
+type Props = {
+  user: User;
+  userObject: { username: string };
+  posts: Post[];
+  // spotName: string;
+  // locationId: string;
+  // userId: number;
+};
 
 export default function PrivateProfile(props: Props) {
   // if (!props.user) {
@@ -29,20 +54,71 @@ export default function PrivateProfile(props: Props) {
 
   return (
     <div>
-      <Head>
-        <title>{props.user.username}</title>
-        <meta
-          name="description"
-          content="Pic Spot is an web app that helps folks new to Vienna find picture perfect spots around Vienna"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Layout>
-        <main>
-          <h1 css={appNameStyles}>@{props.user.username}</h1>
+      <Layout userObject={props.userObject}>
+        <Head>
+          <title>{props.user.username}</title>
+          <meta
+            name="description"
+            content={`Profile Page of ${props.user.username}`}
+          />
+        </Head>
 
-          <div>username: {props.user.username}</div>
-          <div>bio: {props.user.bio}</div>
+        <main>
+          {/* <h1 css={appNameStyles}>@{props.user.username}</h1> */}
+          <div>
+            <img
+              src="https://res.cloudinary.com/cscorner/image/upload/v1657043409/cpa2alxt4drdmascdlwj.jpg"
+              alt="hero pic"
+              style={{ height: '300px', width: '80vw' }}
+            />
+          </div>
+          <div css={appNameStyles}>
+            <div>
+              My spot{' '}
+              <div>
+                <span>{props.user.username}</span>
+              </div>
+              <div>bio:</div>
+              <span>{props.user.bio}</span>
+            </div>
+          </div>
+          <div>
+            <Typography>
+              <Link href="/">
+                <ArrowBackIcon />
+              </Link>
+            </Typography>
+          </div>
+          <div>
+            <Grid container spacing={3}>
+              {props.posts.map((post) => {
+                console.log(post);
+                return (
+                  <Grid item md={4} key={`post-${post.id}`}>
+                    <Card>
+                      <Link href={`/posts/${post.id}`}>
+                        <CardActionArea>
+                          <CardMedia
+                            component="img"
+                            image={post.pictureUrl}
+                            title={post.spotName}
+                          />
+                          <CardContent>
+                            <Typography>{post.spotName}</Typography>
+                          </CardContent>
+                        </CardActionArea>
+                      </Link>
+                      <CardActions>
+                        <Button variant="outlined" size="small" color="primary">
+                          <DeleteIcon />
+                        </Button>
+                      </CardActions>
+                    </Card>
+                  </Grid>
+                );
+              })}
+            </Grid>
+          </div>
         </main>
       </Layout>
     </div>
@@ -55,9 +131,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   );
 
   if (user) {
+    const posts = await getPostsByUserId(user.id);
     return {
       props: {
         user: user,
+        posts: posts,
       },
     };
   }

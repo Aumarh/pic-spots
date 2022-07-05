@@ -9,7 +9,7 @@ import { UploadResponseBody } from './api/upload';
 type Props = {
   refreshUserProfile: () => void;
   userObject: { username: string };
-  cloudinaryAPI: string;
+  // cloudinaryAPI: string;
   userId: number;
   username: string;
 };
@@ -25,22 +25,24 @@ export default function Upload(props: Props) {
   const router = useRouter();
 
   const uploadImage = async (event: any) => {
-    const files = event.currentTarget.files;
+    const pictures = event.currentTarget.files;
+    console.log(pictures);
     const formData = new FormData();
-    formData.append('file', files[0]);
+    formData.append('file', pictures[0]);
     formData.append('upload_preset', 'uploads');
     setLoading(true);
 
     const response = await fetch(
-      `	https://api.cloudinary.com/v1_1/${props.cloudinaryAPI}/image/upload`,
+      `	https://api.cloudinary.com/v1_1/cscorner/image/upload`,
       {
         method: 'POST',
         body: formData,
       },
     );
-    const file = await response.json();
+    const picture = await response.json();
 
-    setPictureUrl(file.secure_url);
+    setPictureUrl(picture.secure_url);
+    console.log(picture.secure_url);
     setLoading(false);
   };
 
@@ -50,7 +52,7 @@ export default function Upload(props: Props) {
         <Head>
           <title>Upload</title>
 
-          <meta name="Homepage" content="Homepage" />
+          <meta name="Pic_spots" content="Pic_spots" />
         </Head>
 
         <div>
@@ -131,11 +133,20 @@ export default function Upload(props: Props) {
                   />
                 </div>
                 <div>
-                  <input
-                    placeholder="add spot tags"
+                  <select
+                    name="postTag"
+                    id="postTag"
+                    placeholder="select spot tags"
                     value={postTag}
                     onChange={(event) => setPostTag(event.currentTarget.value)}
-                  />
+                  >
+                    <option value="outdoor">outdoor</option>
+                    <option value="indoor">indoor</option>
+                    <option value="daytime">daytime</option>
+                    <option value="nighttime">nighttime</option>
+                    <option value="mountain">mountain</option>
+                    <option value="forest">forest</option>
+                  </select>
                 </div>
                 <div>
                   <button>Upload</button>

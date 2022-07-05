@@ -18,6 +18,10 @@ const appNameStyles = css`
   font-weight: bold;
   text-align: center;
 `;
+const postStyles = css`
+  display: flex;
+  justify-content: center;
+`;
 
 type Props = {
   refreshUserProfile: () => void;
@@ -92,7 +96,7 @@ export default function PostDetails(props: Props) {
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        <div>
+        <div css={postStyles}>
           <h1 css={appNameStyles}>@{props.post.spotName}</h1>
           <div>
             <div>

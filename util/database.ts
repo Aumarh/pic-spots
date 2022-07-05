@@ -4,6 +4,8 @@ import postgres from 'postgres';
 
 // import setPostgresDefaultsOnHeroku from './setPostgresDefaultsOnHeroku';
 
+// setPostgresDefaultsOnHeroku();
+
 config();
 
 // Type needed for the connection function below
@@ -35,6 +37,7 @@ export type User = {
   id: number;
   username: string;
   bio: string;
+  heroImage: string;
 };
 
 export type UserWithPasswordHash = User & {
@@ -63,9 +66,9 @@ export type Post = {
   pictureUrl: string;
   spotName: string;
   postDescription: string;
-  locationId: number;
+  location: string;
   postTimestamp: Date;
-  postTags: string[];
+  postTags: string;
 };
 
 export type Comment = {
@@ -150,7 +153,7 @@ export async function createSession(
 ) {
   const [session] = await sql<[Session]>`
   INSERT INTO sessions
-    (token, user_id, csrf_seed)
+    (token, user_id, csrf_secret)
   VALUES
     (${token}, ${userId} , ${CSRFSecret})
   RETURNING
@@ -172,7 +175,7 @@ export async function getValidSessionByToken(token: string) {
   SELECT
     sessions.id,
     sessions.token,
-    sessions.csrf_seed
+    sessions.csrf_secret
   FROM
     sessions
   WHERE
@@ -232,23 +235,26 @@ export async function deleteExpiredSessions() {
 
 export async function createPost(
   userId: number,
+  username: string,
   pictureUrl: string,
   spotName: string,
   postDescription: string,
-  locationId: number,
-  postTags: string[],
+  location: string,
+  postTag: string,
 ) {
   const [post] = await sql<[Post]>`
   INSERT INTO posts
-    (user_id, picture_url, spot_name, post_description, location_id, post_tags)
+    ( user_id, username, picture_url, spot_name, post_description, location, post_tags)
   VALUES
-    (${userId}, ${pictureUrl}, ${spotName}, ${postDescription}, ${locationId}, ${postTags})
+    ( ${userId}, ${username}, ${pictureUrl}, ${spotName}, ${postDescription}, ${location}, ${postTag})
   RETURNING
     id,
+    user_id
+    username,
     picture_url,
     spot_name,
     post_description,
-    location_id,
+    location,
     post_tags,
     post_timestamp
   `;
@@ -296,7 +302,7 @@ export async function getPostById(postId: number) {
     picture_url,
     spot_name,
     post_description,
-    location_id,
+    location,
     post_tags
    FROM
     posts
@@ -320,27 +326,27 @@ export async function getPostsByUserId(userId: number) {
   return posts.map((post) => camelcaseKeys(post));
 }
 
-export async function getPostsByLocationId(locationId: number) {
+export async function getPostsByLocation(location: string) {
   const posts = await sql<[Post[]]>`
   SELECT
     *
   FROM
     posts
   WHERE
-    location_id = ${locationId}
+    location = ${location}
   `;
 
   return posts.map((post) => camelcaseKeys(post));
 }
 
-export async function getPostsByTag(tag: string) {
+export async function getPostsByTag(postTag: string) {
   const posts = await sql<[Post[]]>`
   SELECT
     *
   FROM
     posts
   WHERE
-    post_tags @> ARRAY[${tag}]
+    post_tags = ${postTag}
   `;
 
   return posts.map((post) => camelcaseKeys(post));
@@ -351,8 +357,8 @@ export async function updatePostById(
   image: string,
   spotName: string,
   postDescription: string,
-  locationId: number,
-  postTags: string[],
+  location: string,
+  postTags: string,
 ) {
   const [post] = await sql<[Post]>`
   UPDATE
@@ -361,7 +367,7 @@ export async function updatePostById(
     image = ${image},
     spot_name = ${spotName},
     post_description = ${postDescription},
-    location_id = ${locationId},
+    location = ${location},
     post_tags = ${postTags}
   WHERE
     id = ${postId}
@@ -370,9 +376,28 @@ export async function updatePostById(
     image,
     spot_name,
     post_description,
-    location_id,
+    location,
     post_tags,
     post_timestamp
+  `;
+
+  return camelcaseKeys(post);
+}
+
+// type PictureUrl = {
+//   pictureUrl: string;
+//   userId: number;
+// };
+export async function updatePictureUrlById(pictureUrl: string, userId: number) {
+  const [post] = await sql<Pick<Post, 'pictureUrl'>[]>`
+  UPDATE
+    posts
+  SET
+    image = ${pictureUrl}
+  WHERE
+    user_id = ${userId}
+  RETURNING
+    picture_url
   `;
 
   return camelcaseKeys(post);
@@ -443,3 +468,17 @@ export async function deleteCommentById(commentId: number) {
 
   return comment && camelcaseKeys(comment);
 }
+
+// export async function createPostTag() {
+//   const [postTag] = await sql<[PostTag]>`
+//   INSERT INTO post_tags
+//     (postTag)
+//   VALUES
+//     (${postTag})
+//   RETURNING
+//     id,
+//     tag
+//   `;
+
+//   return camelcaseKeys(postTag);
+// }

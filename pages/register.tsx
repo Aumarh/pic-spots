@@ -113,27 +113,28 @@ export default function Register(props: Props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [bio, setBio] = useState('');
-  const [heroImage, setHeroImage] = useState('');
+  const [heroImage, setHeroImage] = useState('/heroImage1.png');
   const [errors, setErrors] = useState<Errors>([]);
   const router = useRouter();
-
+  console.log('this is cloudinary', props.cloudinaryAPI);
   const uploadImage = async (event: any) => {
-    const files = event.currentTarget.files;
+    const pictures = event.currentTarget.files;
     const formData = new FormData();
-    formData.append('file', files[0]);
+    formData.append('file', pictures[0]);
     formData.append('upload_preset', 'uploads');
     // setLoading(true);
 
     const response = await fetch(
-      `	https://api.cloudinary.com/v1_1/${props.cloudinaryAPI}/image/upload`,
+      `	https://api.cloudinary.com/v1_1/cscorner/image/upload`,
       {
         method: 'POST',
         body: formData,
       },
     );
-    const file = await response.json();
+    const picture = await response.json();
 
-    setHeroImage(file.heroImage_url);
+    setHeroImage(picture.secure_url);
+    console.log('picture from register', picture.secure_url);
     // setLoading(false);
   };
 
@@ -143,8 +144,8 @@ export default function Register(props: Props) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        first_name: firstName,
-        last_name: lastName,
+        firstName: firstName,
+        lastName: lastName,
         username: username,
         password: password,
         bio: bio,
@@ -245,7 +246,12 @@ export default function Register(props: Props) {
               </div>
               <br />
               <div>
-                <input type="file" onChange={uploadImage} />
+                <input
+                  type="file"
+                  onChange={async (event) => {
+                    await uploadImage(event);
+                  }}
+                />
               </div>
               <br />
               <div>
@@ -274,7 +280,7 @@ export default function Register(props: Props) {
   );
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export function getServerSideProps(context: GetServerSidePropsContext) {
   // Redirect from HTTP to HTTPS on Heroku
   if (
     context.req.headers.host &&
@@ -290,29 +296,29 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   // 1. check if there is a token and if it is valid from the cookie
-  const token = context.req.cookies.sessionToken;
+  // const token = context.req.cookies.sessionToken;
 
-  if (token) {
-    // 2. check if the token is valid and redirect
-    const session = await getValidSessionByToken(token);
+  // if (token) {
+  //   // 2. check if the token is valid and redirect
+  //   const session = await getValidSessionByToken(token);
 
-    if (session) {
-      console.log(session);
-      return {
-        redirect: {
-          destination: '/',
-          permanent: false,
-        },
-      };
-    }
-  }
+  //   if (session) {
+  //     console.log(session);
+  //     return {
+  //       redirect: {
+  //         destination: '/',
+  //         permanent: false,
+  //       },
+  //     };
+  //   }
+  // }
 
   const cloudinaryAPI = process.env.CLOUDINARY_NAME;
   // 3. Otherwise, generate CSRF token and render the page
 
   return {
     props: {
-      // csrfToken: createCsrfToken(secret),
+      // csrfToken: createCsrfToken(),
       cloudinaryAPI,
     },
   };

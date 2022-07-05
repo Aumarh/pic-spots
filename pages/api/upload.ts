@@ -2,13 +2,14 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { createPost, Post } from '../../util/database';
 
 type UploadRequestBody = {
-  id: number;
-  image: string;
+  userId: number;
+  username: string;
+  pictureUrl: string;
   spotName: string;
   postDescription: string;
-  locationId: number;
+  location: string;
   postTimestamp: Date;
-  postTags: string[];
+  postTag: string;
 };
 
 type UploadNextApiRequest = Omit<NextApiRequest, 'body'> & {
@@ -26,12 +27,13 @@ export default async function uploadPostHandler(
   if (request.method === 'POST') {
     console.log('request body', request.body);
     const post = await createPost(
-      request.body.id,
-      request.body.image,
+      request.body.userId,
+      request.body.pictureUrl,
       request.body.spotName,
       request.body.postDescription,
-      request.body.locationId,
-      request.body.postTags,
+      request.body.location,
+      request.body.postTag,
+      request.body.username,
     );
 
     response.status(201).json({ post: post });

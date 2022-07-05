@@ -1,9 +1,25 @@
 import { css } from '@emotion/react';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import {
+  Container,
+  ImageList,
+  ImageListItem,
+  ImageListItemBar,
+  Typography,
+} from '@mui/material';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
+import Image from 'next/image';
+import Link from 'next/link';
 import Layout from '../../components/Layout';
 import { createCsrfToken } from '../../util/auth';
-import { getUserById, getValidSessionByToken, User } from '../../util/database';
+import {
+  getPostsByUserId,
+  getUserById,
+  getValidSessionByToken,
+  Post,
+  User,
+} from '../../util/database';
 
 const appNameStyles = css`
   font-family: 'Allura', cursive;
@@ -12,7 +28,14 @@ const appNameStyles = css`
   text-align: center;
 `;
 
-type Props = { user?: User };
+type Props = {
+  user?: User;
+  userObject: { username: string };
+  posts: Post[];
+  spotName: string;
+  locationId: string;
+  // userId: number;
+};
 
 export default function UserDetails(props: Props) {
   if ('errors' in props) {
@@ -34,19 +57,64 @@ export default function UserDetails(props: Props) {
 
   return (
     <div>
-      <Head>
-        <title>{props.user.username}</title>
-        <meta
-          name="description"
-          content="Pic Spot is an web app that helps folks new to Vienna find picture perfect spots around Vienna"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Layout>
+      <Layout userObject={props.userObject}>
+        <Head>
+          <title>{props.user.username}</title>
+          <meta
+            name="description"
+            content={`Profile Page of ${props.user.username}`}
+          />
+        </Head>
         <main>
-          <h1 css={appNameStyles}>User #{props.user.username}</h1>
-          <div>username: {props.user.username}</div>
-          <div>Bio: {props.user.bio}</div>
+          <div>
+            <img src={props.user.heroImage} alt="hero pic" />
+          </div>
+          <div css={appNameStyles}>
+            <div>
+              Spot of{' '}
+              <div>
+                <span>{props.user.username}</span>
+              </div>
+              <div>bio:</div>
+              <span>{props.user.bio}</span>
+            </div>
+          </div>
+          <div>
+            <Typography>
+              <Link href="/">
+                <ArrowBackIcon />
+              </Link>
+            </Typography>
+          </div>
+          <div>
+            <h1>post list</h1>
+            <Container>
+              <ImageList variant="standard" cols={3} gap={8}>
+                {props.posts.map((post) => {
+                  return (
+                    <ImageListItem key={`post-${post.id}`}>
+                      <Link href={`/posts/${post.id}`}>
+                        <a>
+                          <Image
+                            // src={`${item.img}?w=248&fit=crop&auto=format`}
+                            src={post.pictureUrl}
+                            // srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                            alt="pic spot"
+                            loading="lazy"
+                          />
+                        </a>
+                        <ImageListItemBar
+                          title={props.spotName}
+                          subtitle={props.locationId}
+                          position="below"
+                        />
+                      </Link>
+                    </ImageListItem>
+                  );
+                })}
+              </ImageList>
+            </Container>
+          </div>
         </main>
       </Layout>
     </div>
@@ -64,9 +132,7 @@ export default function UserDetails(props: Props) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const userIdFromUrl = context.query.userId;
-
-  // const userId = context.query.userId;
-  // const posts = await getPostsByUserId(Number(userId));
+  const posts = await getPostsByUserId(Number(userIdFromUrl));
 
   // checking that the user param is a string
   if (!userIdFromUrl || Array.isArray(userIdFromUrl)) {
@@ -89,9 +155,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
     };
   }
-  const csrfToken = createCsrfToken(session.csrfSeed);
+  const csrfToken = createCsrfToken(session.csrfSecret);
   return {
     props: {
+      user: user,
+      posts: posts,
       csrfToken: csrfToken,
     },
   };

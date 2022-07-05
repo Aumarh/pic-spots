@@ -2,8 +2,8 @@ exports.up = async (sql) => {
   await sql`
     CREATE TABLE post_tags (
       id SERIAL PRIMARY KEY,
-			post_id INT NOT NULL,
-			tag_id INT NOT NULL
+			user_id INT REFERENCES users (id) ON DELETE CASCADE,
+			tag_name VARCHAR(100) NOT NULL
     )
 		`;
 };

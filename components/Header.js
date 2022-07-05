@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import PeopleIcon from '@mui/icons-material/People';
 import Icon from '@mui/material/Icon';
 import Link from 'next/link';
 
@@ -37,6 +38,9 @@ export default function Header(props) {
           <Link href="/users/private-profile">
             <AccountCircleIcon {...(props.user && props.user.username)} />
           </Link>
+          {/* <Link href="/users/userId">
+            <PeopleIcon />
+          </Link> */}
           <Link href="/upload">
             <Icon sx={{ fontSize: 30 }}>+</Icon>
           </Link>

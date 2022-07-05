@@ -5,7 +5,7 @@ exports.up = async (sql) => {
 			user_id INT REFERENCES users (id) ON DELETE CASCADE,
 			token VARCHAR (110) UNIQUE NOT NULL,
 			expiry_timestamp timestamp NOT NULL DEFAULT NOW() + INTERVAL '24 hours',
-			csrf_seed VARCHAR(100) NOT NULL
+			csrf_secret VARCHAR(100) NOT NULL
     )
 		`;
 };
