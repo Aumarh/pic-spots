@@ -13,6 +13,7 @@ const brandStyles = css`
 `;
 const navBarStyles = css`
   /* background: #f9f4f4; */
+
   a {
     color: #0a0a0a;
     margin-left: 10px;
@@ -23,9 +24,14 @@ const headerGrowStyles = css`
   flex-grow: 1;
   display: flex;
   justify-content: space-between;
+  margin-top: 10px;
+  margin-bottom: 10px;
 
   a {
     margin-left: 10px;
+  }
+  :hover {
+    cursor: pointer;
   }
 `;
 
@@ -38,9 +44,9 @@ export default function Header(props) {
           <Link href="/users/private-profile">
             <AccountCircleIcon {...(props.user && props.user.username)} />
           </Link>
-          {/* <Link href="/users/userId">
+          <Link href="/community">
             <PeopleIcon />
-          </Link> */}
+          </Link>
           <Link href="/upload">
             <Icon sx={{ fontSize: 30 }}>+</Icon>
           </Link>

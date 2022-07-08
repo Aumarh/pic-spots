@@ -21,26 +21,43 @@ export type UploadResponseBody =
   | { post: Post };
 
 export default async function uploadPostHandler(
-  request: UploadNextApiRequest,
-  response: NextApiResponse<UploadResponseBody>,
+  req: UploadNextApiRequest,
+  res: NextApiResponse<UploadResponseBody>,
 ) {
-  if (request.method === 'POST') {
-    console.log('request body', request.body);
+  if (req.method === 'POST') {
+    console.log('request body', req.body);
+    if (
+      typeof req.body.userId !== 'number' ||
+      typeof req.body.username !== 'string' ||
+      typeof req.body.pictureUrl !== 'string' ||
+      typeof req.body.spotName !== 'string' ||
+      typeof req.body.postDescription !== 'string' ||
+      typeof req.body.location !== 'string' ||
+      !req.body.userId ||
+      !req.body.username ||
+      !req.body.pictureUrl ||
+      !req.body.spotName ||
+      !req.body.postDescription ||
+      !req.body.location
+    ) {
+      res.status(401).json({ errors: [{ message: 'provide upload details' }] });
+      return;
+    }
     const post = await createPost(
-      request.body.userId,
-      request.body.pictureUrl,
-      request.body.spotName,
-      request.body.postDescription,
-      request.body.location,
-      request.body.postTag,
-      request.body.username,
+      req.body.userId,
+      // req.body.username,
+      req.body.pictureUrl,
+      req.body.spotName,
+      req.body.postDescription,
+      req.body.location,
+      // req.body.postTag,
     );
 
-    response.status(201).json({ post: post });
+    res.status(201).json({ post: post });
     return;
   }
 
-  response.status(405).json({
+  res.status(405).json({
     errors: [
       {
         message: 'Method not supported, try POST instead',

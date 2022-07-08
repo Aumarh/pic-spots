@@ -25,7 +25,7 @@ export default async function commentsHandler(
     const createdComment = await createComment(
       request.body.userId,
       request.body.postId,
-      request.body.commentFromUser,
+      request.body.commentText,
       request.body.username,
     );
     response.status(201).json({ comment: createdComment });

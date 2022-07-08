@@ -13,22 +13,24 @@ type Props = {
   userId: number;
   username: string;
 };
+type Errors = { message: string }[];
 
 export default function Upload(props: Props) {
   const [pictureUrl, setPictureUrl] = useState('/white.png');
   const [spotName, setSpotName] = useState('');
   const [loading, setLoading] = useState(false);
-  const [spotDescription, setSpotDescription] = useState('');
+  const [postDescription, setPostDescription] = useState('');
   const [location, setLocation] = useState('');
   const [postTag, setPostTag] = useState('');
+  const [errors, setErrors] = useState<Errors>([]);
 
   const router = useRouter();
 
   const uploadImage = async (event: any) => {
-    const pictures = event.currentTarget.files;
-    console.log(pictures);
+    const files = event.currentTarget.files;
+    console.log(files);
     const formData = new FormData();
-    formData.append('file', pictures[0]);
+    formData.append('file', files[0]);
     formData.append('upload_preset', 'uploads');
     setLoading(true);
 
@@ -39,12 +41,46 @@ export default function Upload(props: Props) {
         body: formData,
       },
     );
-    const picture = await response.json();
+    const file = await response.json();
 
-    setPictureUrl(picture.secure_url);
-    console.log(picture.secure_url);
+    setPictureUrl(file.secure_url);
+    console.log(file.secure_url);
     setLoading(false);
   };
+
+  async function uploadHandler() {
+    // event.preventDefault();
+    const uploadResponse = await fetch('/api/upload', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: props.userId,
+        pictureUrl: pictureUrl,
+        spotName: spotName,
+        postDescription: postDescription,
+        location: location,
+        // postTag: postTag,
+        username: props.username,
+      }),
+    });
+
+    const uploadResponseBody =
+      (await uploadResponse.json()) as UploadResponseBody;
+
+    console.log('uploadResponseBody', uploadResponseBody);
+
+    // handling the errors from the server with an error message
+    if ('errors' in uploadResponseBody) {
+      setErrors(uploadResponseBody.errors);
+      return;
+    }
+
+    props.refreshUserProfile();
+    // redirect to user profile after upload
+    await router.push(`/users/private-profile`);
+  }
 
   return (
     <div>
@@ -61,98 +97,76 @@ export default function Upload(props: Props) {
 
         <div>
           <div>
-            <form
-              onSubmit={async (event) => {
-                event.preventDefault();
-                const uploadResponse = await fetch('/api/upload', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    userId: props.userId,
-                    pictureUrl: pictureUrl,
-                    spotName: spotName,
-                    spotDescription: spotDescription,
-                    location: location,
-                    postTag: postTag,
-                    username: props.username,
-                  }),
-                });
-
-                const uploadResponseBody =
-                  (await uploadResponse.json()) as UploadResponseBody;
-
-                console.log('uploadResponseBody', uploadResponseBody);
-
-                props.refreshUserProfile();
-                // redirect to user profile after upload
-                await router.push(`/users/private-profile`);
-              }}
-            >
+            <label>
+              <input
+                type="file"
+                onChange={async (event) => {
+                  await uploadImage(event);
+                }}
+              />
               <div>
-                <input type="file" onChange={uploadImage} />
-
-                <div>
-                  {loading ? (
-                    <div>
-                      <img src="/loading.gif" alt="loading" />
-                    </div>
-                  ) : (
-                    <img
-                      src={pictureUrl}
-                      alt="preview"
-                      style={{ height: '500px', width: '500px' }}
-                    />
-                  )}
-                </div>
+                {loading ? (
+                  <div>
+                    <img src="/loading.gif" alt="loading" />
+                  </div>
+                ) : (
+                  <img
+                    src={pictureUrl}
+                    alt="preview"
+                    style={{ height: '500px', width: '500px' }}
+                  />
+                )}
               </div>
-
+            </label>
+            <br />
+            <div>
+              <label>
+                <input
+                  placeholder="add title"
+                  value={spotName}
+                  onChange={(event) => setSpotName(event.currentTarget.value)}
+                />
+              </label>
+              <br />
+              <label>
+                <textarea
+                  placeholder="add description"
+                  value={postDescription}
+                  onChange={(event) =>
+                    setPostDescription(event.currentTarget.value)
+                  }
+                />
+              </label>
+              <br />
+              <label>
+                <input
+                  placeholder="location"
+                  value={location}
+                  onChange={(event) => setLocation(event.currentTarget.value)}
+                />
+              </label>
+              <br />
               <div>
-                <div>
-                  <input
-                    placeholder="add title"
-                    value={spotName}
-                    onChange={(event) => setSpotName(event.currentTarget.value)}
-                  />
-                </div>
-                <div>
-                  <textarea
-                    placeholder="add description"
-                    value={spotDescription}
-                    onChange={(event) =>
-                      setSpotDescription(event.currentTarget.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <input
-                    placeholder="location"
-                    value={location}
-                    onChange={(event) => setLocation(event.currentTarget.value)}
-                  />
-                </div>
-                <div>
-                  <select
-                    name="postTag"
-                    id="postTag"
-                    placeholder="select spot tags"
-                    value={postTag}
-                    onChange={(event) => setPostTag(event.currentTarget.value)}
-                  >
-                    <option value="outdoor">outdoor</option>
-                    <option value="indoor">indoor</option>
-                    <option value="daytime">daytime</option>
-                    <option value="nighttime">nighttime</option>
-                    <option value="mountain">mountain</option>
-                    <option value="forest">forest</option>
-                  </select>
-                </div>
-                <div>
-                  <button>Upload</button>
-                </div>
+                <select
+                  name="postTag"
+                  id="postTag"
+                  placeholder="select spot tags"
+                  value={postTag}
+                  onChange={(event) => setPostTag(event.currentTarget.value)}
+                >
+                  <option value="outdoor">outdoor</option>
+                  <option value="indoor">indoor</option>
+                  <option value="daytime">daytime</option>
+                  <option value="nighttime">nighttime</option>
+                  <option value="mountain">mountain</option>
+                  <option value="forest">forest</option>
+                </select>
               </div>
-            </form>
+              <br />
+              <div>
+                <button onClick={() => uploadHandler()}>Upload</button>
+              </div>
+            </div>
           </div>
         </div>
       </Layout>

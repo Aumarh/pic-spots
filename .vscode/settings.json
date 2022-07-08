@@ -8,6 +8,7 @@
     "PGDATABASE",
     "PGHOST",
     "PGPASSWORD",
-    "PGUSERNAME"
+    "PGUSERNAME",
+    "superjson"
   ]
 }

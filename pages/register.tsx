@@ -117,10 +117,11 @@ export default function Register(props: Props) {
   const [errors, setErrors] = useState<Errors>([]);
   const router = useRouter();
   console.log('this is cloudinary', props.cloudinaryAPI);
+
   const uploadImage = async (event: any) => {
-    const pictures = event.currentTarget.files;
+    const files = event.currentTarget.files;
     const formData = new FormData();
-    formData.append('file', pictures[0]);
+    formData.append('file', files[0]);
     formData.append('upload_preset', 'uploads');
     // setLoading(true);
 
@@ -131,10 +132,10 @@ export default function Register(props: Props) {
         body: formData,
       },
     );
-    const picture = await response.json();
+    const file = await response.json();
 
-    setHeroImage(picture.secure_url);
-    console.log('picture from register', picture.secure_url);
+    setHeroImage(file.secure_url);
+    console.log('picture from register', file.secure_url);
     // setLoading(false);
   };
 
@@ -155,7 +156,7 @@ export default function Register(props: Props) {
     });
     const registerResponseBody: RegisterResponseBody =
       await registerResponse.json();
-    console.log(registerResponseBody);
+    console.log('This is register response', registerResponseBody);
 
     // handling the errors from the server with an error message
     if ('errors' in registerResponseBody) {

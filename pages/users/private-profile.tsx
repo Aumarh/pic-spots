@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import {
   Button,
   Card,
@@ -29,6 +30,17 @@ const appNameStyles = css`
   text-align: center;
 `;
 
+const arrowStyles = css`
+  margin-right: 10px;
+  margin-bottom: 15px;
+
+  :hover {
+    cursor: pointer;
+  }
+`;
+
+const profileInfoStyles = css``;
+
 type Props = {
   user: User;
   userObject: { username: string };
@@ -51,7 +63,7 @@ export default function PrivateProfile(props: Props) {
   //     </>
   //   );
   // }
-
+  console.log('this is user', props.user);
   return (
     <div>
       <Layout userObject={props.userObject}>
@@ -67,13 +79,13 @@ export default function PrivateProfile(props: Props) {
           {/* <h1 css={appNameStyles}>@{props.user.username}</h1> */}
           <div>
             <img
-              src="https://res.cloudinary.com/cscorner/image/upload/v1657043409/cpa2alxt4drdmascdlwj.jpg"
+              src={props.user.heroImage}
               alt="hero pic"
               style={{ height: '300px', width: '80vw' }}
             />
           </div>
           <div css={appNameStyles}>
-            <div>
+            <div css={profileInfoStyles}>
               My spot{' '}
               <div>
                 <span>{props.user.username}</span>
@@ -82,7 +94,7 @@ export default function PrivateProfile(props: Props) {
               <span>{props.user.bio}</span>
             </div>
           </div>
-          <div>
+          <div css={arrowStyles}>
             <Typography>
               <Link href="/">
                 <ArrowBackIcon />
@@ -102,9 +114,13 @@ export default function PrivateProfile(props: Props) {
                             component="img"
                             image={post.pictureUrl}
                             title={post.spotName}
+                            height={400}
                           />
                           <CardContent>
-                            <Typography>{post.spotName}</Typography>
+                            <Typography>Spot: {post.spotName}</Typography>
+                            <Typography>
+                              <LocationOnIcon /> {post.location}
+                            </Typography>
                           </CardContent>
                         </CardActionArea>
                       </Link>
@@ -132,10 +148,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   if (user) {
     const posts = await getPostsByUserId(user.id);
+    // const heroImage = await getHeroImageByUsername(user.username);
     return {
       props: {
         user: user,
         posts: posts,
+        // heroImage: heroImage,
       },
     };
   }

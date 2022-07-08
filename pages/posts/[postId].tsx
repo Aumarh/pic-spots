@@ -1,4 +1,9 @@
 import { css } from '@emotion/react';
+import AddCommentIcon from '@mui/icons-material/AddComment';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DeleteIcon from '@mui/icons-material/Delete';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { Typography } from '@mui/material';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -12,20 +17,77 @@ import {
   Post,
 } from '../../util/database';
 
-const appNameStyles = css`
-  font-family: 'Allura', cursive;
-  font-size: 2.5rem;
-  font-weight: bold;
-  text-align: center;
+// const appNameStyles = css`
+//   font-family: 'Allura', cursive;
+//   font-size: 2.5rem;
+//   font-weight: bold;
+//   text-align: center;
+// `;
+// const postStyles = css`
+//   display: flex;
+//   justify-content: center;
+// `;
+
+const arrowStyles = css`
+  margin-right: 10px;
+  margin-bottom: 15px;
+
+  :hover {
+    cursor: pointer;
+  }
 `;
-const postStyles = css`
+
+const pictureStyles = css`
+  display: block;
+  margin-top: 50px;
+  border-radius: 10px;
+`;
+
+const commentSectionStyles = css`
+  font-weight: bold;
+  display: block;
+  border-radius: 2px;
+  margin-top: 40px;
+  width: 600px;
+
+  padding: 20px;
+  box-shadow: 3px 5px 7px #3b3b3b;
+  button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  textarea {
+    font-family: inter;
+    width: 450px;
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+`;
+
+const pictureInfoStyles = css`
+  button {
+    background: transparent;
+    border: transparent;
+    cursor: pointer;
+    justify-items: right;
+  }
+
+  border-radius: 2px;
+
+  width: 543px;
+  height: 100px;
+  margin: 30px 50px;
+  padding: 10px 20px 80px 30px;
+  box-shadow: 5px 7px 9px #3b3b3b;
+  align-items: right;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
 `;
 
 type Props = {
   refreshUserProfile: () => void;
-  userObject: { spotName: string; pictureUrl: string };
+  userObject: { spotName: string; heroImage: string };
   post: Post;
 
   postComments: {
@@ -34,7 +96,7 @@ type Props = {
     postId: number;
     commentText: string;
     username: string;
-    pictureUrl: string;
+    heroImage: string;
   }[];
   userId: number;
   username: string;
@@ -96,99 +158,118 @@ export default function PostDetails(props: Props) {
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        <div css={postStyles}>
-          <h1 css={appNameStyles}>@{props.post.spotName}</h1>
-          <div>
-            <div>
-              <img src={props.post.pictureUrl} alt="uploaded post" />
-              <div>
-                {props.userId === props.post.userId && (
-                  <button
-                    onClick={() => {
-                      deletePostByPostId(props.post.id).catch(() => {});
-                    }}
-                  >
-                    Delete
-                  </button>
-                )}
-              </div>
-              <div>
-                <p>comments </p>
-                <form
-                  onSubmit={async (event) => {
-                    event.preventDefault();
-                    const commentResponse = await fetch('/api/comments', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({
-                        commentFromUser: commentText,
-                        userId: props.userId,
-                        postId: props.post.id,
-                        pictureUrl: props.userObject.pictureUrl,
-                        username: props.userObject.spotName,
-                      }),
-                    });
-                    const commentResponseBody = await commentResponse.json();
-
-                    console.log('commentResponseBody', commentResponseBody);
-                    setCommentText('');
-
-                    const newCommentsList = [
-                      ...newComment,
-                      commentResponseBody.comment,
-                    ];
-                    setNewComment(newCommentsList);
-
-                    return;
-                  }}
-                >
-                  <div>
-                    <textarea
-                      value={commentText}
-                      onChange={(event) => setCommentText(event.target.value)}
-                    />
-                    <button>Comment</button>
-                  </div>
-                </form>
-                {newComment.length === 0 ? (
-                  <div> </div>
-                ) : (
-                  newComment.map((event) => {
-                    return (
-                      <div key={event.commentText}>
-                        <img src={event.pictureUrl} alt="user" />
-                        <p>
-                          {' '}
-                          {event.username}: <span>{event.commentText}</span>
-                        </p>
-                        {props.userId === props.post.userId && (
-                          <button
-                            onClick={() => {
-                              deleteComment(event.id).catch(() => {});
-                            }}
-                          >
-                            Delete
-                            {/* <Image src="/delete.png" width="20px" height="20px" /> */}
-                          </button>
-                        )}
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            </div>
+        <div>
+          <div css={arrowStyles}>
+            <Typography>
+              <Link href="/">
+                <ArrowBackIcon />
+              </Link>
+            </Typography>
           </div>
           <div>
-            <div>{props.post.spotName}</div>
-            <div>{props.post.postDescription}</div>
-            <div>{props.post.locationId}</div>
-            <div>{props.post.postTags}</div>
+            <div css={pictureStyles}>
+              <img
+                src={props.post.pictureUrl}
+                alt="uploaded post"
+                width="500px"
+                height="500px"
+              />
+            </div>
+            <div css={pictureInfoStyles}>
+              <br />
+              <div>spot: {props.post.spotName}</div>
+              <br />
+              <div>description: {props.post.postDescription}</div>
+              <br />
+              <div>
+                <LocationOnIcon /> {props.post.location}
+              </div>
+              {/* <div>{props.post.postTags}</div> */}
+              <br />
+              <div>
+                <Link href={`/users/${props.post.userId}`}>
+                  <a>posted by: @{props.post.username}</a>
+                </Link>
+              </div>
+            </div>
             <div>
-              <Link href={`/users/${props.post.userId}`}>
-                <a>posted by: @{props.post.username}</a>
-              </Link>
+              {props.userId === props.post.userId && (
+                <button
+                  onClick={() => {
+                    deletePostByPostId(props.post.id).catch(() => {});
+                  }}
+                >
+                  Delete
+                </button>
+              )}
+            </div>
+            <div css={commentSectionStyles}>
+              <p>Comments </p>
+              <form
+                onSubmit={async (event) => {
+                  event.preventDefault();
+                  const commentResponse = await fetch('/api/comments', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      userId: props.userId,
+                      commentText: commentText,
+                      postId: props.post.id,
+                      username: props.username,
+                      heroImage: props.userObject.heroImage,
+                    }),
+                  });
+                  const commentResponseBody = await commentResponse.json();
+
+                  console.log('commentResponseBody', commentResponseBody);
+                  setCommentText('');
+
+                  const newCommentsList = [
+                    ...newComment,
+                    commentResponseBody.comment,
+                  ];
+                  setNewComment(newCommentsList);
+
+                  return;
+                }}
+              >
+                <div>
+                  <textarea
+                    value={commentText}
+                    onChange={(event) => setCommentText(event.target.value)}
+                  />
+                  <button>
+                    <AddCommentIcon />
+                  </button>
+                </div>
+                <br />
+              </form>
+              {newComment.length === 0 ? (
+                <div> </div>
+              ) : (
+                newComment.map((event) => {
+                  return (
+                    <div key={event.commentText}>
+                      <img src={event.heroImage} alt="user" />
+                      <p>
+                        {' '}
+                        {event.username}: <span>{event.commentText}</span>
+                      </p>
+                      {props.userId === props.post.userId && (
+                        <button
+                          onClick={() => {
+                            deleteComment(event.id).catch(() => {});
+                          }}
+                        >
+                          <DeleteIcon />
+                        </button>
+                      )}
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
         </div>

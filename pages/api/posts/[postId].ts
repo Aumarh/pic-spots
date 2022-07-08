@@ -33,7 +33,7 @@ export default async function postHandler(
   if (!postId) {
     response.status(400).json({ errors: 'PostId must be a number' });
     return;
-  } else if (request.method === 'PUT') {
+  } else if (request.method === 'POST') {
     // Access the post from the request body
     const postFromRequest = request.body.post;
     const updatedPost = await updatePostById(
@@ -41,7 +41,7 @@ export default async function postHandler(
       postFromRequest.pictureUrl,
       postFromRequest.spotName,
       postFromRequest.postDescription,
-      postFromRequest.locationId,
+      postFromRequest.location,
       postFromRequest.postTags,
     );
 

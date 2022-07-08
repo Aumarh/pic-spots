@@ -1,15 +1,15 @@
 import { css } from '@emotion/react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
-  Container,
-  ImageList,
-  ImageListItem,
-  ImageListItemBar,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Grid,
   Typography,
 } from '@mui/material';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
-import Image from 'next/image';
 import Link from 'next/link';
 import Layout from '../../components/Layout';
 import { createCsrfToken } from '../../util/auth';
@@ -28,12 +28,21 @@ const appNameStyles = css`
   text-align: center;
 `;
 
+const arrowStyles = css`
+  margin-right: 10px;
+  margin-bottom: 15px;
+
+  :hover {
+    cursor: pointer;
+  }
+`;
+
 type Props = {
   user?: User;
   userObject: { username: string };
   posts: Post[];
-  spotName: string;
-  locationId: string;
+  // spotName: string;
+  // location: string;
   // userId: number;
 };
 
@@ -67,7 +76,11 @@ export default function UserDetails(props: Props) {
         </Head>
         <main>
           <div>
-            <img src={props.user.heroImage} alt="hero pic" />
+            <img
+              src={props.user.heroImage}
+              alt="hero pic"
+              style={{ height: '300px', width: '80vw' }}
+            />
           </div>
           <div css={appNameStyles}>
             <div>
@@ -79,7 +92,7 @@ export default function UserDetails(props: Props) {
               <span>{props.user.bio}</span>
             </div>
           </div>
-          <div>
+          <div css={arrowStyles}>
             <Typography>
               <Link href="/">
                 <ArrowBackIcon />
@@ -87,33 +100,32 @@ export default function UserDetails(props: Props) {
             </Typography>
           </div>
           <div>
-            <h1>post list</h1>
-            <Container>
-              <ImageList variant="standard" cols={3} gap={8}>
-                {props.posts.map((post) => {
-                  return (
-                    <ImageListItem key={`post-${post.id}`}>
+            <h1 css={appNameStyles}>spot list</h1>
+            <Grid container spacing={3}>
+              {props.posts.map((post) => {
+                console.log(post);
+                return (
+                  <Grid item md={4} key={`post-${post.id}`}>
+                    <Card>
                       <Link href={`/posts/${post.id}`}>
-                        <a>
-                          <Image
-                            // src={`${item.img}?w=248&fit=crop&auto=format`}
-                            src={post.pictureUrl}
-                            // srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                            alt="pic spot"
-                            loading="lazy"
+                        <CardActionArea>
+                          <CardMedia
+                            component="img"
+                            image={post.pictureUrl}
+                            title={post.spotName}
+                            height={400}
                           />
-                        </a>
-                        <ImageListItemBar
-                          title={props.spotName}
-                          subtitle={props.locationId}
-                          position="below"
-                        />
+                          <CardContent>
+                            <Typography>Spot name: {post.spotName}</Typography>
+                            <Typography>location: {post.location}</Typography>
+                          </CardContent>
+                        </CardActionArea>
                       </Link>
-                    </ImageListItem>
-                  );
-                })}
-              </ImageList>
-            </Container>
+                    </Card>
+                  </Grid>
+                );
+              })}
+            </Grid>
           </div>
         </main>
       </Layout>

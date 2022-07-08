@@ -96,6 +96,7 @@ export async function createUser(
   RETURNING
     id,
     username
+
   `;
 
   return camelcaseKeys(user);
@@ -123,7 +124,9 @@ export async function getUserById(userId: number) {
   const [user] = await sql<[User | undefined]>`
     SELECT
       id,
-      username
+      username,
+      bio,
+      hero_image
     FROM
       users
     WHERE
@@ -194,7 +197,9 @@ export async function getUserByValidSessionToken(token: string) {
   const [user] = await sql<[User | undefined]>`
   SELECT
     users.id,
-    users.username
+    users.username,
+    users.bio,
+    users.hero_image
   FROM
     users,
     sessions
@@ -234,6 +239,34 @@ export async function deleteExpiredSessions() {
 }
 
 export async function createPost(
+  userId: number,
+  // username: string,
+  pictureUrl: string,
+  spotName: string,
+  postDescription: string,
+  location: string,
+  // postTag: string,
+) {
+  const [post] = await sql<[Post]>`
+  INSERT INTO posts
+    ( user_id, picture_url, spot_name, post_description, location)
+  VALUES
+    ( ${userId}, ${pictureUrl}, ${spotName}, ${postDescription}, ${location})
+  RETURNING
+    id,
+    user_id,
+    picture_url,
+    spot_name,
+    post_description,
+    location
+    -- post_tags,
+    -- post_timestamp
+  `;
+
+  return camelcaseKeys(post);
+}
+
+export async function insertPost(
   userId: number,
   username: string,
   pictureUrl: string,
@@ -302,8 +335,8 @@ export async function getPostById(postId: number) {
     picture_url,
     spot_name,
     post_description,
-    location,
-    post_tags
+    location
+    -- post_tags
    FROM
     posts
    WHERE
@@ -324,6 +357,19 @@ export async function getPostsByUserId(userId: number) {
   `;
 
   return posts.map((post) => camelcaseKeys(post));
+}
+
+export async function getHeroImageByUsername(username: string) {
+  const heroImage = await sql<[User[]]>`
+  SELECT
+    hero_image
+  FROM
+    users
+  WHERE
+    username = ${username}
+  `;
+
+  return camelcaseKeys(heroImage);
 }
 
 export async function getPostsByLocation(location: string) {
@@ -379,25 +425,6 @@ export async function updatePostById(
     location,
     post_tags,
     post_timestamp
-  `;
-
-  return camelcaseKeys(post);
-}
-
-// type PictureUrl = {
-//   pictureUrl: string;
-//   userId: number;
-// };
-export async function updatePictureUrlById(pictureUrl: string, userId: number) {
-  const [post] = await sql<Pick<Post, 'pictureUrl'>[]>`
-  UPDATE
-    posts
-  SET
-    image = ${pictureUrl}
-  WHERE
-    user_id = ${userId}
-  RETURNING
-    picture_url
   `;
 
   return camelcaseKeys(post);
@@ -469,16 +496,28 @@ export async function deleteCommentById(commentId: number) {
   return comment && camelcaseKeys(comment);
 }
 
-// export async function createPostTag() {
-//   const [postTag] = await sql<[PostTag]>`
-//   INSERT INTO post_tags
-//     (postTag)
-//   VALUES
-//     (${postTag})
-//   RETURNING
-//     id,
-//     tag
-//   `;
+export type PostTag = {
+  userId: number;
+  tagName: string;
+};
 
-//   return camelcaseKeys(postTag);
-// }
+export async function createPostTag(tagName: string, userId: number) {
+  const [postTag] = await sql<[PostTag]>`
+  INSERT INTO post_tags
+    (user_id, tag_name)
+  VALUES
+    (${userId}, ${tagName})
+  RETURNING
+    id,
+    tag_name
+  `;
+
+  return camelcaseKeys(postTag);
+}
+
+export async function getUsers() {
+  const animals = await sql<User[]>`
+    SELECT * FROM users
+  `;
+  return animals.map((user) => camelcaseKeys(user));
+}
