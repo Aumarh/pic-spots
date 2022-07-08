@@ -1,11 +1,11 @@
 import { css } from '@emotion/react';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { createCsrfToken } from '../util/auth';
-import { getValidSessionByToken } from '../util/database';
+// import { createCsrfToken } from '../util/auth';
+// import { getValidSessionByToken } from '../util/database';
 import { RegisterResponseBody } from './api/register';
 
 const heroStyle = css`
