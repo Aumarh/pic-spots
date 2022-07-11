@@ -1,22 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createComment, deleteCommentById } from '../../util/database';
 
-// type CommentRequestBody = {
-//   userId: number;
-//   postId: number;
-//   comment: string;
-//   username: string;
-//   image: string;
-// };
-
-// type CommentNextApiRequest = Omit<NextApiRequest, 'body'> & {
-//   body: CommentRequestBody;
-// };
-
-// export type CommentResponseBody =
-//   | { errors: { message: string }[] }
-//   | { comment: Comment };
-
 export default async function commentsHandler(
   request: NextApiRequest,
   response: NextApiResponse,
@@ -27,10 +11,12 @@ export default async function commentsHandler(
       request.body.postId,
       request.body.commentText,
       request.body.username,
+      request.body.heroImage,
     );
     response.status(201).json({ comment: createdComment });
     return;
   }
+
   const commentId = Number(request.query.commentId);
   if (request.method === 'DELETE') {
     const deletedComment = await deleteCommentById(commentId);

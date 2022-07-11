@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import {
   Card,
   CardActionArea,
@@ -25,16 +26,32 @@ const appNameStyles = css`
   font-family: 'Allura', cursive;
   font-size: 2.5rem;
   font-weight: bold;
-  text-align: center;
 `;
 
 const arrowStyles = css`
   margin-right: 10px;
   margin-bottom: 15px;
-
+  margin-top: 15px;
   :hover {
     cursor: pointer;
   }
+`;
+
+const profileInfoStyles = css`
+  border-radius: 2px;
+
+  width: 543px;
+  height: 100px;
+  margin: 10px 0;
+  padding: 10px 20px 80px 30px;
+  box-shadow: 2px 5px 6px #3b3b3b;
+  align-items: right;
+  display: flex;
+  flex-direction: column;
+`;
+
+const heroImageStyles = css`
+  border-radius: 2px;
 `;
 
 type Props = {
@@ -75,7 +92,7 @@ export default function UserDetails(props: Props) {
           />
         </Head>
         <main>
-          <div>
+          <div css={heroImageStyles}>
             <img
               src={props.user.heroImage}
               alt="hero pic"
@@ -83,18 +100,14 @@ export default function UserDetails(props: Props) {
             />
           </div>
           <div css={appNameStyles}>
-            <div>
-              Spot of{' '}
-              <div>
-                <span>{props.user.username}</span>
-              </div>
-              <div>bio:</div>
-              <span>{props.user.bio}</span>
+            <div css={profileInfoStyles}>
+              <div>Spot of {props.user.username}</div>
+              <div>bio: {props.user.bio}</div>
             </div>
           </div>
           <div css={arrowStyles}>
             <Typography>
-              <Link href="/">
+              <Link href="/community">
                 <ArrowBackIcon />
               </Link>
             </Typography>
@@ -117,7 +130,9 @@ export default function UserDetails(props: Props) {
                           />
                           <CardContent>
                             <Typography>Spot name: {post.spotName}</Typography>
-                            <Typography>location: {post.location}</Typography>
+                            <Typography>
+                              <LocationOnIcon /> {post.location}
+                            </Typography>
                           </CardContent>
                         </CardActionArea>
                       </Link>

@@ -43,7 +43,7 @@ export default function Home(props: Props) {
           <title>Pic Spots</title>
           <meta
             name="description"
-            content="Pic Spot is an web app that helps folks new to Vienna find picture perfect spots around Vienna"
+            content="Pic Spot is a web app that help folks new to Vienna find picture perfect spots for their photos."
           />
           <link rel="icon" href="/favicon.ico" />
         </Head>

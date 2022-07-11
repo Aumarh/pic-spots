@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -5,6 +6,79 @@ import { useState } from 'react';
 import Layout from '../components/Layout';
 import { getUserByValidSessionToken } from '../util/database';
 import { UploadResponseBody } from './api/upload';
+
+const appNameStyles = css`
+  font-family: 'Allura', cursive;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+`;
+
+const uploadContainerStyles = css`
+  background: #f4effc;
+
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+`;
+
+const uploadBodyStyles = css`
+  form {
+    display: flex;
+    gap: 300px;
+  }
+`;
+
+const uploadInputStyles = css`
+  margin-bottom: 30px;
+
+  ::-webkit-file-upload-button {
+    background: #a8c5f9;
+    color: black;
+    margin-left: 8x;
+    padding-top: 4px;
+    font-size: 18px;
+    border-radius: 4px;
+    width: 150px;
+    height: 40px;
+    outline: none;
+    cursor: pointer;
+    border: transparent;
+    /* display: none; */
+  }
+
+  /* :hover::before {
+    border: #779677 solid 4px;
+  } */
+`;
+
+const uploadInfoStyles = css`
+  /* border: solid 10px #957666; */
+  /* border-radius: 66px; */
+  /* width: 20px; */
+  /* height: 600px; */
+  /* margin: 50px; */
+  margin-left: 8x;
+  padding-top: 4px;
+  /* box-shadow: 5px 10px 20px #957666; */
+  /* align-items: center; */
+  display: flex;
+  flex-direction: column;
+`;
+
+const uploadButtonStyles = css`
+  color: black;
+  background: #a8c5f9;
+  text-align: center;
+  width: 150px;
+  height: 40px;
+  border-radius: 4px;
+  margin-top: 30px;
+  font-size: 18px;
+
+  border: transparent;
+  cursor: pointer;
+`;
 
 type Props = {
   refreshUserProfile: () => void;
@@ -91,19 +165,21 @@ export default function Upload(props: Props) {
           <meta name="Pic_spots" content="Pic_spots" />
         </Head>
 
-        <div>
+        <div css={appNameStyles}>
           <h1>Upload new spots</h1>
         </div>
 
-        <div>
-          <div>
+        <div css={uploadContainerStyles}>
+          <div css={uploadBodyStyles}>
             <label>
               <input
+                css={uploadInputStyles}
                 type="file"
                 onChange={async (event) => {
                   await uploadImage(event);
                 }}
               />
+
               <div>
                 {loading ? (
                   <div>
@@ -119,10 +195,10 @@ export default function Upload(props: Props) {
               </div>
             </label>
             <br />
-            <div>
+            <div css={uploadInfoStyles}>
               <label>
                 <input
-                  placeholder="add title"
+                  placeholder="spot name"
                   value={spotName}
                   onChange={(event) => setSpotName(event.currentTarget.value)}
                 />
@@ -130,7 +206,7 @@ export default function Upload(props: Props) {
               <br />
               <label>
                 <textarea
-                  placeholder="add description"
+                  placeholder="spot description"
                   value={postDescription}
                   onChange={(event) =>
                     setPostDescription(event.currentTarget.value)
@@ -140,7 +216,7 @@ export default function Upload(props: Props) {
               <br />
               <label>
                 <input
-                  placeholder="location"
+                  placeholder=" spot location"
                   value={location}
                   onChange={(event) => setLocation(event.currentTarget.value)}
                 />
@@ -162,9 +238,15 @@ export default function Upload(props: Props) {
                   <option value="forest">forest</option>
                 </select>
               </div>
+
               <br />
               <div>
-                <button onClick={() => uploadHandler()}>Upload</button>
+                <button
+                  css={uploadButtonStyles}
+                  onClick={() => uploadHandler()}
+                >
+                  Upload
+                </button>
               </div>
             </div>
           </div>

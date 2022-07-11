@@ -15,6 +15,8 @@ import {
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+// import { useRouter } from 'next/router';
+import { useState } from 'react';
 import Layout from '../../components/Layout';
 import {
   getPostsByUserId,
@@ -27,42 +29,67 @@ const appNameStyles = css`
   font-family: 'Allura', cursive;
   font-size: 2.5rem;
   font-weight: bold;
-  text-align: center;
+  text-align: left;
+  display: flex;
 `;
 
 const arrowStyles = css`
   margin-right: 10px;
   margin-bottom: 15px;
-
+  margin-top: 15px;
   :hover {
     cursor: pointer;
   }
 `;
 
-const profileInfoStyles = css``;
+const profileInfoStyles = css`
+  border-radius: 2px;
+
+  width: 543px;
+  height: 100px;
+  margin: 10px 0;
+  padding: 10px 20px 80px 30px;
+  box-shadow: 2px 5px 6px #3b3b3b;
+  align-items: right;
+  display: flex;
+  flex-direction: column;
+`;
+
+const heroImageStyles = css``;
 
 type Props = {
+  // refreshUserProfile: () => void;
   user: User;
   userObject: { username: string };
   posts: Post[];
+  // post: Post;
   // spotName: string;
   // locationId: string;
   // userId: number;
 };
 
 export default function PrivateProfile(props: Props) {
-  // if (!props.user) {
-  //   return (
-  //     <>
-  //       <Head>
-  //         <title>User not found</title>
-  //         <meta name="description" content="User not found" />
-  //       </Head>
-  //       <h1>404 - User not found</h1>
-  //       Better luck next time
-  //     </>
-  //   );
-  // }
+  // const router = useRouter();
+  const [postList, setPostList] = useState<Post[]>([]);
+  async function deletePostByPostId(id: number) {
+    const deleteResponse = await fetch(`/api/post/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        postId: id,
+      }),
+    });
+    const deletedPost = await deleteResponse.json();
+
+    const newState = postList.filter((post) => post.id !== deletedPost.id);
+    setPostList(newState);
+    // props.refreshUserProfile();
+    // await router.push(`/users/${props.userId}`);
+    // return deleteResponse;
+  }
+
   console.log('this is user', props.user);
   return (
     <div>
@@ -77,7 +104,7 @@ export default function PrivateProfile(props: Props) {
 
         <main>
           {/* <h1 css={appNameStyles}>@{props.user.username}</h1> */}
-          <div>
+          <div css={heroImageStyles}>
             <img
               src={props.user.heroImage}
               alt="hero pic"
@@ -86,12 +113,8 @@ export default function PrivateProfile(props: Props) {
           </div>
           <div css={appNameStyles}>
             <div css={profileInfoStyles}>
-              My spot{' '}
-              <div>
-                <span>{props.user.username}</span>
-              </div>
-              <div>bio:</div>
-              <span>{props.user.bio}</span>
+              <div>{props.user.username}'s spot!</div>
+              <div>bio: {props.user.bio}</div>
             </div>
           </div>
           <div css={arrowStyles}>
@@ -125,9 +148,20 @@ export default function PrivateProfile(props: Props) {
                         </CardActionArea>
                       </Link>
                       <CardActions>
-                        <Button variant="outlined" size="small" color="primary">
+                        {/* {props.userId === props.post.userId && ( */}
+                        <Button
+                          onClick={() =>
+                            deletePostByPostId(post.id).catch(() => {
+                              console.log('error');
+                            })
+                          }
+                          variant="outlined"
+                          size="small"
+                          color="primary"
+                        >
                           <DeleteIcon />
                         </Button>
+                        {/* )} */}
                       </CardActions>
                     </Card>
                   </Grid>

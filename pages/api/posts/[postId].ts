@@ -9,9 +9,9 @@ type PostRequestBody = {
   post: Post;
 };
 
-// type DeletePostResponseBody =
-//   | { errors: { message: string }[] }
-//   | { post: Post };
+export type DeletePostResponseBody =
+  | { errors: { message: string }[] }
+  | { post: Post };
 
 type PostNextApiRequest = Omit<NextApiRequest, 'body'> & {
   body: PostRequestBody;
@@ -45,14 +45,16 @@ export default async function postHandler(
       postFromRequest.postTags,
     );
 
-    // if (!updatedPost) {
-    //   response.status(404).json({ errors: 'Post not found' });
-    //   return;
-    // }
+    if (!updatedPost) {
+      response.status(404).json({ errors: 'Post not found' });
+      return;
+    }
 
     response.status(200).json({ post: updatedPost });
     return;
-  } else if (request.method === 'DELETE') {
+  }
+
+  if (request.method === 'DELETE') {
     const deletedPost = await deletePostByPostId(postId);
 
     if (!deletedPost) {

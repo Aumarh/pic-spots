@@ -1,23 +1,32 @@
 import { css } from '@emotion/react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import PeopleIcon from '@mui/icons-material/People';
 import Icon from '@mui/material/Icon';
 import Link from 'next/link';
 
 const brandStyles = css`
   a {
-    /* font-weight: bold; */
-    font-size: 1.5rem;
+    font-weight: bold;
+    font-size: 1.8rem;
     text-decoration: none;
+    font-family: allura;
+    margin-right: 1rem;
   }
 `;
 const navBarStyles = css`
-  /* background: #f9f4f4; */
-
+  /* background: #8ec6fa; */
+  padding-top: 0.1rem;
+  margin: 0;
   a {
     color: #0a0a0a;
     margin-left: 10px;
     text-decoration: none;
+    /* html,
+    body {
+      margin: 0;
+      padding: 0;
+    } */
   }
 `;
 const headerGrowStyles = css`
@@ -42,13 +51,15 @@ export default function Header(props) {
         <div css={headerGrowStyles}>
           <Link href="/">PicSpots</Link>
           <Link href="/users/private-profile">
-            <AccountCircleIcon {...(props.user && props.user.username)} />
+            <AccountCircleIcon {...(props.user && props.user.heroImage)} />
           </Link>
           <Link href="/community">
             <PeopleIcon />
           </Link>
           <Link href="/upload">
-            <Icon sx={{ fontSize: 30 }}>+</Icon>
+            <Icon sx={{ fontSize: 30 }}>
+              <AddAPhotoIcon />
+            </Icon>
           </Link>
           <Link href="/logout">Sign out</Link>
         </div>

@@ -7,7 +7,6 @@ import { Typography } from '@mui/material';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Layout from '../../components/Layout';
 import {
@@ -23,10 +22,13 @@ import {
 //   font-weight: bold;
 //   text-align: center;
 // `;
-// const postStyles = css`
-//   display: flex;
-//   justify-content: center;
-// `;
+const postContainerStyles = css`
+  background: #f2eff8;
+  gap: 300px;
+  border-radius: 4px;
+
+  justify-content: center;
+`;
 
 const arrowStyles = css`
   margin-right: 10px;
@@ -41,6 +43,7 @@ const pictureStyles = css`
   display: block;
   margin-top: 50px;
   border-radius: 10px;
+  margin-left: 300px;
 `;
 
 const commentSectionStyles = css`
@@ -48,10 +51,11 @@ const commentSectionStyles = css`
   display: block;
   border-radius: 2px;
   margin-top: 40px;
+  margin-left: 250px;
   width: 600px;
 
   padding: 20px;
-  box-shadow: 3px 5px 7px #3b3b3b;
+  box-shadow: 1px 3px 5px #3b3b3b;
   button {
     background: transparent;
     border: none;
@@ -74,19 +78,24 @@ const pictureInfoStyles = css`
   }
 
   border-radius: 2px;
-
-  width: 543px;
+  margin-left: 250px;
+  width: 587px;
   height: 100px;
-  margin: 30px 50px;
+  margin-top: 20px;
+  /* margin: 30px 0px; */
   padding: 10px 20px 80px 30px;
-  box-shadow: 5px 7px 9px #3b3b3b;
+  box-shadow: 1px 3px 5px #3b3b3b;
   align-items: right;
   display: flex;
   flex-direction: column;
+
+  a {
+    text-decoration: none;
+    color: black;
+  }
 `;
 
 type Props = {
-  refreshUserProfile: () => void;
   userObject: { spotName: string; heroImage: string };
   post: Post;
 
@@ -105,23 +114,6 @@ type Props = {
 export default function PostDetails(props: Props) {
   const [commentText, setCommentText] = useState<string>('');
   const [newComment, setNewComment] = useState(props.postComments);
-  const router = useRouter();
-
-  async function deletePostByPostId(id: number) {
-    const deleteResponse = await fetch(`/api/post/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        postId: id,
-      }),
-    });
-
-    props.refreshUserProfile();
-    await router.push(`/users/${props.userId}`);
-    return deleteResponse;
-  }
 
   const deleteComment = async (id: number) => {
     const response = await fetch(`/api/comments/${id}`, {
@@ -166,7 +158,7 @@ export default function PostDetails(props: Props) {
               </Link>
             </Typography>
           </div>
-          <div>
+          <div css={postContainerStyles}>
             <div css={pictureStyles}>
               <img
                 src={props.post.pictureUrl}
@@ -177,9 +169,9 @@ export default function PostDetails(props: Props) {
             </div>
             <div css={pictureInfoStyles}>
               <br />
-              <div>spot: {props.post.spotName}</div>
+              <div>Spot: {props.post.spotName}</div>
               <br />
-              <div>description: {props.post.postDescription}</div>
+              <div>Description: {props.post.postDescription}</div>
               <br />
               <div>
                 <LocationOnIcon /> {props.post.location}
@@ -192,17 +184,7 @@ export default function PostDetails(props: Props) {
                 </Link>
               </div>
             </div>
-            <div>
-              {props.userId === props.post.userId && (
-                <button
-                  onClick={() => {
-                    deletePostByPostId(props.post.id).catch(() => {});
-                  }}
-                >
-                  Delete
-                </button>
-              )}
-            </div>
+
             <div css={commentSectionStyles}>
               <p>Comments </p>
               <form

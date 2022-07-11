@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Grid, Stack, Typography } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
 import Head from 'next/head';
 import Link from 'next/link';
 import Layout from '../components/Layout';
@@ -21,6 +22,16 @@ const arrowStyles = css`
     cursor: pointer;
   }
 `;
+
+const userListStyles = css`
+  margin-bottom: 30px;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+`;
+// const userNameStyles = css``;
 
 type Props = {
   users: User;
@@ -52,11 +63,16 @@ export default function community(props: Props) {
             <div>
               {props.users.map((user) => {
                 return (
-                  <div key={`users-${user.id}`}>
-                    <div>
+                  <div css={userListStyles} key={`users-${user.id}`}>
+                    <Stack direction="row" spacing={2}>
+                      <Avatar
+                        alt={user.username}
+                        src={user.heroImage}
+                        sx={{ width: 30, height: 30 }}
+                      />
                       Spot of:{' '}
-                      <Link href={`/users/${user.id}`}>{user.firstName}</Link>
-                    </div>
+                      <Link href={`/users/${user.id}`}>{user.username}</Link>
+                    </Stack>
                   </div>
                 );
               })}

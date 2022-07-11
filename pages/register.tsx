@@ -11,8 +11,8 @@ import { RegisterResponseBody } from './api/register';
 const heroStyle = css`
   background: url('heroimage.jpeg');
   position: absolute;
-  width: 1512px;
-  height: 982px;
+  width: 100vw;
+  height: 100vh;
   left: 0px;
   top: 0px;
   background-size: cover;
@@ -23,10 +23,10 @@ const heroStyle = css`
 
 const loginBannerStyles = css`
   box-sizing: border-box;
-  border-radius: 2px;
+  border-radius: 8px;
   position: absolute;
   width: 320px;
-  height: 500px;
+  height: 600px;
   left: 207px;
   top: 190px;
   /* mix-blend-mode: screen; */
@@ -38,6 +38,7 @@ const loginBannerStyles = css`
     margin-top: 50px;
   }
 `;
+
 export const usernameInputStyles = css`
   /* position: absolute; */
   left: 17.33%;
@@ -45,8 +46,8 @@ export const usernameInputStyles = css`
   top: 35.74%;
   bottom: 58.83%;
   width: 191px;
-  background: #ffffff;
-  border-radius: 2px;
+  /* background: #ffffff; */
+  border-radius: 4px;
   color: #000000;
 `;
 
@@ -58,8 +59,8 @@ export const passwordInputStyles = css`
   top: 44.7%;
   bottom: 49.87%;
   color: #000000;
-  background: #ffffff;
-  border-radius: 2px;
+  /* background: #ffffff; */
+  border-radius: 4px;
 `;
 
 const createAccountButtonStyles = css`
@@ -71,8 +72,9 @@ const createAccountButtonStyles = css`
   bottom: 24.21%;
   width: 199px;
   background: #1bd290;
-  border-radius: 2px;
   color: #000000;
+  margin-top: 20px;
+  border-radius: 4px;
 `;
 
 const firstNameInputStyles = css`
@@ -82,8 +84,8 @@ const firstNameInputStyles = css`
   top: 35.85%;
   bottom: 58.73%;
   width: 190px;
-  background: #ffffff;
-  border-radius: 2px;
+  /* background: #ffffff; */
+  border-radius: 4px;
 `;
 
 const lastNameInputStyles = css`
@@ -93,13 +95,36 @@ const lastNameInputStyles = css`
   top: 42.64%;
   bottom: 51.93%;
   width: 190px;
-  background: #ffffff;
-  border-radius: 2px;
+  /* background: #ffffff; */
+  border-radius: 4px;
+`;
+
+const bioInputStyles = css`
+  top: 35.85%;
+  bottom: 58.73%;
+  width: 190px;
+`;
+
+const fileButtonStyles = css`
+  border-radius: 4px;
+`;
+
+const uploadImageStyles = css`
+  border-radius: 4px;
+  margin-left: 55px;
+`;
+
+const textAreaStyles = css`
+  width: 190px;
+  border-radius: 4px;
+  height: 50px;
 `;
 
 export const errorStyles = css`
   color: red;
+  margin-top: 10px;
 `;
+
 type Errors = { message: string }[];
 
 type Props = {
@@ -190,6 +215,7 @@ export default function Register(props: Props) {
       <Head>
         <title>Register</title>
         <meta name="register" content="Register a new user" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
         <h1>register</h1>
@@ -201,7 +227,7 @@ export default function Register(props: Props) {
                 <input
                   value={firstName}
                   onChange={(event) => setFirstName(event.currentTarget.value)}
-                  placeholder="first_name"
+                  placeholder="add first name"
                   css={firstNameInputStyles}
                 />
               </div>
@@ -211,17 +237,17 @@ export default function Register(props: Props) {
                 <input
                   value={lastName}
                   onChange={(event) => setLastName(event.currentTarget.value)}
-                  placeholder="last_name"
+                  placeholder="add last name"
                   css={lastNameInputStyles}
                 />
               </div>
               <br />
               <div>
-                User name:
+                Username:
                 <input
                   value={username}
                   onChange={(event) => setUsername(event.currentTarget.value)}
-                  placeholder="username"
+                  placeholder="add username"
                   css={usernameInputStyles}
                 />
               </div>
@@ -232,21 +258,22 @@ export default function Register(props: Props) {
                   type="password"
                   onChange={(event) => setPassword(event.currentTarget.value)}
                   value={password}
-                  placeholder="password"
+                  placeholder="add password"
                   css={passwordInputStyles}
                 />
               </div>
               <br />
-              <div>
+              <div css={bioInputStyles}>
                 Bio:
                 <textarea
                   value={bio}
                   placeholder="add a short bio"
                   onChange={(event) => setBio(event.currentTarget.value)}
+                  css={textAreaStyles}
                 />
               </div>
               <br />
-              <div>
+              <div css={fileButtonStyles}>
                 <input
                   type="file"
                   onChange={async (event) => {
@@ -255,24 +282,26 @@ export default function Register(props: Props) {
                 />
               </div>
               <br />
-              <div>
+              <div css={uploadImageStyles}>
                 <img
                   src={heroImage}
                   alt="user hero pic"
                   style={{ height: '100px', width: '100px' }}
                 />
               </div>
-              <button
-                onClick={() => registerHandler()}
-                css={createAccountButtonStyles}
-              >
-                Create account
-              </button>
-              {errors.map((error) => (
-                <div css={errorStyles} key={`error-${error.message}`}>
-                  {error.message}
-                </div>
-              ))}
+              <div>
+                <button
+                  onClick={() => registerHandler()}
+                  css={createAccountButtonStyles}
+                >
+                  Create account
+                </button>
+                {errors.map((error) => (
+                  <div css={errorStyles} key={`error-${error.message}`}>
+                    {error.message}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
