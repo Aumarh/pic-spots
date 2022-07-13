@@ -77,7 +77,7 @@ export type Comment = {
   postId: number;
   comment: string;
   username: string;
-  postTimestamp: Date;
+  heroImage: string;
 };
 
 export async function createUser(
@@ -432,7 +432,7 @@ export async function updatePostById(
 
 // Delete post by id
 export async function deletePostByPostId(postId: number) {
-  const [post] = await sql<[Post | undefined]>`
+  const post = await sql<[Post | undefined]>`
   DELETE FROM
     posts
   WHERE
@@ -441,7 +441,7 @@ export async function deletePostByPostId(postId: number) {
    *
   `;
 
-  return post && camelcaseKeys(post);
+  return camelcaseKeys(post);
 }
 
 // Create comments
@@ -518,8 +518,8 @@ export async function createPostTag(tagName: string, userId: number) {
 }
 
 export async function getUsers() {
-  const animals = await sql<User[]>`
+  const users = await sql<User[]>`
     SELECT * FROM users
   `;
-  return animals.map((user) => camelcaseKeys(user));
+  return users.map((user) => camelcaseKeys(user));
 }

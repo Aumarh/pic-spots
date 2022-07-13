@@ -4,6 +4,7 @@
     "camelcase",
     "CLOUDINARY",
     "crossorigin",
+    "geocode",
     "heroimage",
     "PGDATABASE",
     "PGHOST",

@@ -1,8 +1,13 @@
 import { css } from '@emotion/react';
+import { useLoadScript } from '@react-google-maps/api';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import PlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from 'react-places-autocomplete';
 import Layout from '../components/Layout';
 import { getUserByValidSessionToken } from '../util/database';
 import { UploadResponseBody } from './api/upload';
@@ -15,7 +20,7 @@ const appNameStyles = css`
 `;
 
 const uploadContainerStyles = css`
-  background: #f4effc;
+  background: #eff8fc;
 
   border-radius: 4px;
   display: flex;
@@ -35,7 +40,7 @@ const uploadInputStyles = css`
   ::-webkit-file-upload-button {
     background: #a8c5f9;
     color: black;
-    margin-left: 8x;
+    margin-left: 0;
     padding-top: 4px;
     font-size: 18px;
     border-radius: 4px;
@@ -53,17 +58,27 @@ const uploadInputStyles = css`
 `;
 
 const uploadInfoStyles = css`
-  /* border: solid 10px #957666; */
-  /* border-radius: 66px; */
-  /* width: 20px; */
-  /* height: 600px; */
-  /* margin: 50px; */
   margin-left: 8x;
   padding-top: 4px;
-  /* box-shadow: 5px 10px 20px #957666; */
-  /* align-items: center; */
   display: flex;
   flex-direction: column;
+`;
+
+const uploadTextareaStyles = css`
+  width: 250px;
+  height: 50px;
+`;
+
+const spotNameStyles = css`
+  width: 250px;
+`;
+
+const locationInputStyles = css`
+  width: 245px;
+`;
+
+const tagSelectStyles = css`
+  width: 250px;
 `;
 
 const uploadButtonStyles = css`
@@ -86,8 +101,11 @@ type Props = {
   // cloudinaryAPI: string;
   userId: number;
   username: string;
+  googleAPI: string;
 };
 type Errors = { message: string }[];
+
+type Value = string;
 
 export default function Upload(props: Props) {
   const [pictureUrl, setPictureUrl] = useState('/white.png');
@@ -95,8 +113,11 @@ export default function Upload(props: Props) {
   const [loading, setLoading] = useState(false);
   const [postDescription, setPostDescription] = useState('');
   const [location, setLocation] = useState('');
+  const [lat, setLat] = useState(0);
+  const [lng, setLng] = useState(0);
   const [postTag, setPostTag] = useState('');
   const [errors, setErrors] = useState<Errors>([]);
+  const libraries = ['places'];
 
   const router = useRouter();
 
@@ -122,6 +143,21 @@ export default function Upload(props: Props) {
     setLoading(false);
   };
 
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: props.googleAPI,
+    libraries,
+  });
+
+  if (loadError) return 'Error loading maps';
+  if (!isLoaded) return 'Loading Maps';
+  const handleSelect = async (value: Value) => {
+    const results = await geocodeByAddress(value);
+    const latLng = await getLatLng(results[0]);
+    setLocation(value);
+    setLat(latLng.lat);
+    setLng(latLng.lng);
+  };
+
   async function uploadHandler() {
     // event.preventDefault();
     const uploadResponse = await fetch('/api/upload', {
@@ -135,7 +171,8 @@ export default function Upload(props: Props) {
         spotName: spotName,
         postDescription: postDescription,
         location: location,
-        // postTag: postTag,
+        lat: lat,
+        lng: lng,
         username: props.username,
       }),
     });
@@ -198,7 +235,8 @@ export default function Upload(props: Props) {
             <div css={uploadInfoStyles}>
               <label>
                 <input
-                  placeholder="spot name"
+                  css={spotNameStyles}
+                  placeholder="add spot name"
                   value={spotName}
                   onChange={(event) => setSpotName(event.currentTarget.value)}
                 />
@@ -206,7 +244,8 @@ export default function Upload(props: Props) {
               <br />
               <label>
                 <textarea
-                  placeholder="spot description"
+                  css={uploadTextareaStyles}
+                  placeholder="add spot description"
                   value={postDescription}
                   onChange={(event) =>
                     setPostDescription(event.currentTarget.value)
@@ -215,11 +254,54 @@ export default function Upload(props: Props) {
               </label>
               <br />
               <label>
-                <input
-                  placeholder=" spot location"
+                <PlacesAutocomplete
                   value={location}
-                  onChange={(event) => setLocation(event.currentTarget.value)}
-                />
+                  // countries="at"
+                  onChange={setLocation}
+                  onSelect={handleSelect}
+                >
+                  {({ getInputProps, suggestions, getSuggestionItemProps }) => (
+                    <div>
+                      <input
+                        css={locationInputStyles}
+                        {...getInputProps({ placeholder: 'add address' })}
+                      />
+
+                      <div>
+                        {loading ? <div>...loading</div> : null}
+
+                        {suggestions.map((suggestion) => {
+                          const style = {
+                            backgroundColor: suggestion.active
+                              ? '#a8c5f9'
+                              : '#fff',
+                            width: '20em',
+                            marginTop: 12,
+                            marginBottom: 12,
+                            paddingTop: 4,
+                            paddingBottom: 4,
+                            fontFamily: 'Inter',
+                            fontWeight: 500,
+                            fontSize: 14,
+                            color: '#5d6470',
+                          };
+
+                          return (
+                            <div key={`li-suggestion-${suggestion.placeId}`}>
+                              <div
+                                {...getSuggestionItemProps(suggestion, {
+                                  style,
+                                })}
+                              >
+                                {suggestion.description}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </PlacesAutocomplete>
               </label>
               <br />
               <div>
@@ -229,6 +311,7 @@ export default function Upload(props: Props) {
                   placeholder="select spot tags"
                   value={postTag}
                   onChange={(event) => setPostTag(event.currentTarget.value)}
+                  css={tagSelectStyles}
                 >
                   <option value="outdoor">outdoor</option>
                   <option value="indoor">indoor</option>
@@ -260,6 +343,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const cloudinaryAPI = process.env.CLOUDINARY_NAME;
   const sessionToken = context.req.cookies.sessionToken;
   const session = await getUserByValidSessionToken(sessionToken);
+  const googleAPI = process.env.GOOGLE_API_KEY;
 
   if (!session) {
     return {
@@ -273,6 +357,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       cloudinaryAPI,
       userId: session.id,
       username: session.username,
+      googleAPI: googleAPI,
     },
   };
 }

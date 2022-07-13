@@ -8,6 +8,8 @@ type UploadRequestBody = {
   spotName: string;
   postDescription: string;
   location: string;
+  latitude: number;
+  longitude: number;
   postTimestamp: Date;
   postTag: string;
 };

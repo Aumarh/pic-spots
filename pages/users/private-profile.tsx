@@ -15,8 +15,7 @@ import {
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-// import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
 import {
   getPostsByUserId,
@@ -58,7 +57,7 @@ const profileInfoStyles = css`
 const heroImageStyles = css``;
 
 type Props = {
-  // refreshUserProfile: () => void;
+  refreshUserProfile: () => void;
   user: User;
   userObject: { username: string };
   posts: Post[];
@@ -70,9 +69,11 @@ type Props = {
 
 export default function PrivateProfile(props: Props) {
   // const router = useRouter();
-  const [postList, setPostList] = useState<Post[]>([]);
+  // const [postList, setPostList] = useState<Post[]>([]);
+  const router = useRouter();
+
   async function deletePostByPostId(id: number) {
-    const deleteResponse = await fetch(`/api/post/${id}`, {
+    const deleteResponse = await fetch(`/api/posts/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -81,16 +82,16 @@ export default function PrivateProfile(props: Props) {
         postId: id,
       }),
     });
-    const deletedPost = await deleteResponse.json();
+    // const deletedPost = await deleteResponse.json();
 
-    const newState = postList.filter((post) => post.id !== deletedPost.id);
-    setPostList(newState);
-    // props.refreshUserProfile();
-    // await router.push(`/users/${props.userId}`);
-    // return deleteResponse;
+    // const newState = postList.filter((post) => post.id !== deletedPost.id);
+    // setPostList(newState);
+    props.refreshUserProfile();
+    await router.push(`/users/private-profile`);
+    return deleteResponse;
   }
 
-  console.log('this is user', props.user);
+  // console.log('this is post', props.posts);
   return (
     <div>
       <Layout userObject={props.userObject}>
@@ -150,11 +151,9 @@ export default function PrivateProfile(props: Props) {
                       <CardActions>
                         {/* {props.userId === props.post.userId && ( */}
                         <Button
-                          onClick={() =>
-                            deletePostByPostId(post.id).catch(() => {
-                              console.log('error');
-                            })
-                          }
+                          onClick={() => {
+                            deletePostByPostId(post.id).catch(() => {});
+                          }}
                           variant="outlined"
                           size="small"
                           color="primary"

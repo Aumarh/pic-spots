@@ -14,7 +14,7 @@ const footerStyles = css`
 export default function Footer() {
   return (
     <footer css={footerStyles}>
-      <Typography>Ⓒ Pic Spots. All Rights Reserved.</Typography>
+      <Typography>Ⓒ Pic Spots 2022. All Rights Reserved.</Typography>
     </footer>
   );
 }

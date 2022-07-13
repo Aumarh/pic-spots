@@ -16,6 +16,7 @@ export default async function commentsHandler(
     response.status(201).json({ comment: createdComment });
     return;
   }
+  // console.log('this is comment', createComment);
 
   const commentId = Number(request.query.commentId);
   if (request.method === 'DELETE') {

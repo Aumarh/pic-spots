@@ -30,6 +30,10 @@ const userListStyles = css`
     text-decoration: none;
     color: inherit;
   }
+
+  a:hover {
+    text-decoration: underline;
+  }
 `;
 // const userNameStyles = css``;
 
@@ -68,10 +72,12 @@ export default function community(props: Props) {
                       <Avatar
                         alt={user.username}
                         src={user.heroImage}
-                        sx={{ width: 30, height: 30 }}
+                        sx={{ width: 40, height: 40 }}
                       />
-                      Spot of:{' '}
-                      <Link href={`/users/${user.id}`}>{user.username}</Link>
+                      <p>
+                        Spot of:{' '}
+                        <Link href={`/users/${user.id}`}>{user.username}</Link>
+                      </p>
                     </Stack>
                   </div>
                 );

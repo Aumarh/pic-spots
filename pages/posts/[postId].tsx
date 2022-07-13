@@ -3,7 +3,7 @@ import AddCommentIcon from '@mui/icons-material/AddComment';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { Typography } from '@mui/material';
+import { Avatar, Stack, Typography } from '@mui/material';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -14,6 +14,7 @@ import {
   getPostById,
   getUserByValidSessionToken,
   Post,
+  User,
 } from '../../util/database';
 
 // const appNameStyles = css`
@@ -23,7 +24,7 @@ import {
 //   text-align: center;
 // `;
 const postContainerStyles = css`
-  background: #f2eff8;
+  background: #eff8fc;
   gap: 300px;
   border-radius: 4px;
 
@@ -96,7 +97,7 @@ const pictureInfoStyles = css`
 `;
 
 type Props = {
-  userObject: { spotName: string; heroImage: string };
+  userObject: { spotName: string; username: string; heroImage: string };
   post: Post;
 
   postComments: {
@@ -107,7 +108,7 @@ type Props = {
     username: string;
     heroImage: string;
   }[];
-  userId: number;
+  user: User;
   username: string;
 };
 
@@ -125,7 +126,7 @@ export default function PostDetails(props: Props) {
         commentId: id,
       }),
     });
-
+    console.log('this is user', props.user);
     const newResponse = await response.json();
     console.log('newResponse)', newResponse.deletedComment);
     const newCommentList = newComment.filter((comment) => {
@@ -180,7 +181,7 @@ export default function PostDetails(props: Props) {
               <br />
               <div>
                 <Link href={`/users/${props.post.userId}`}>
-                  <a>posted by: @{props.post.username}</a>
+                  <a>posted by: @{props.user.username}</a>
                 </Link>
               </div>
             </div>
@@ -190,22 +191,23 @@ export default function PostDetails(props: Props) {
               <form
                 onSubmit={async (event) => {
                   event.preventDefault();
+                  console.log('this is user', props.user);
                   const commentResponse = await fetch('/api/comments', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                      userId: props.userId,
+                      userId: props.user.id,
                       commentText: commentText,
                       postId: props.post.id,
-                      username: props.username,
-                      heroImage: props.userObject.heroImage,
+                      username: props.user.username,
+                      heroImage: props.user.heroImage,
                     }),
                   });
                   const commentResponseBody = await commentResponse.json();
 
-                  console.log('commentResponseBody', commentResponseBody);
+                  console.log('This is comment', commentResponseBody);
                   setCommentText('');
 
                   const newCommentsList = [
@@ -234,12 +236,18 @@ export default function PostDetails(props: Props) {
                 newComment.map((event) => {
                   return (
                     <div key={event.commentText}>
-                      <img src={event.heroImage} alt="user" />
-                      <p>
-                        {' '}
-                        {event.username}: <span>{event.commentText}</span>
-                      </p>
-                      {props.userId === props.post.userId && (
+                      <Stack direction="row" spacing={2}>
+                        <Avatar
+                          alt={event.username}
+                          src={event.heroImage}
+                          sx={{ width: 40, height: 40 }}
+                        />
+                        <p>
+                          {' '}
+                          {event.username}: {event.commentText}
+                        </p>
+                      </Stack>
+                      {props.user.id === props.post.userId && (
                         <button
                           onClick={() => {
                             deleteComment(event.id).catch(() => {});
@@ -293,12 +301,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
     };
   }
+  console.log('this is loggedInUser', loggedInUser);
   const postComments = await getCommentsByPostId(parseInt(postIdFromUrl));
   return {
     props: {
       post: post,
       postId: postIdFromUrl,
-      userId: loggedInUser.id,
+      user: loggedInUser,
       postComments: postComments,
     },
   };
