@@ -1,11 +1,8 @@
 import { css } from '@emotion/react';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
-// import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-// import { createCsrfToken } from '../util/auth';
-// import { getValidSessionByToken } from '../util/database';
 import { RegisterResponseBody } from './api/register';
 
 const heroStyle = css`
@@ -26,7 +23,7 @@ const loginBannerStyles = css`
   border-radius: 8px;
   position: absolute;
   width: 320px;
-  height: 600px;
+  height: 710px;
   left: 207px;
   top: 190px;
   /* mix-blend-mode: screen; */
@@ -46,35 +43,59 @@ export const usernameInputStyles = css`
   top: 35.74%;
   bottom: 58.83%;
   width: 191px;
-  /* background: #ffffff; */
-  border-radius: 4px;
+  height: 30px;
+  border-color: #16231f;
+  border-radius: 8px;
   color: #000000;
 `;
 
 export const passwordInputStyles = css`
   width: 191px;
-  /* position: absolute; */
+  height: 30px;
   left: 17.33%;
   right: 63.56%;
   top: 44.7%;
   bottom: 49.87%;
   color: #000000;
-  /* background: #ffffff; */
-  border-radius: 4px;
+  border-color: #16231f;
+  border-radius: 8px;
 `;
 
 const createAccountButtonStyles = css`
-  /* Button */
-  /* position: absolute; */
+  background-image: linear-gradient(144deg, #af40ff, #5c849f 50%, #1bd290);
+  border: 0;
+  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+  box-sizing: border-box;
+  height: 40px;
   left: 17.33%;
   right: 63.56%;
   top: 70.37%;
   bottom: 24.21%;
   width: 199px;
-  background: #1bd290;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  cursor: pointer;
+
+  /* background: #1bd290; */
   color: #000000;
   margin-top: 20px;
-  border-radius: 4px;
+  border-radius: 8px;
+  font-size: 20px;
+
+  :hover {
+    background-color: #1bd290;
+    box-shadow: #4e10ab 0 -6px 8px inset;
+    transform: scale(1.125);
+  }
+
+  /* @media (min-width: 768px) {
+
+  .button-63 {
+    font-size: 24px;
+    min-width: 196px;
+  } */
 `;
 
 const firstNameInputStyles = css`
@@ -84,8 +105,9 @@ const firstNameInputStyles = css`
   top: 35.85%;
   bottom: 58.73%;
   width: 190px;
-  /* background: #ffffff; */
-  border-radius: 4px;
+  height: 30px;
+  border-color: #16231f;
+  border-radius: 8px;
 `;
 
 const lastNameInputStyles = css`
@@ -95,22 +117,41 @@ const lastNameInputStyles = css`
   top: 42.64%;
   bottom: 51.93%;
   width: 190px;
-  /* background: #ffffff; */
-  border-radius: 4px;
+  height: 30px;
+  border-color: #16231f;
+  border-radius: 8px;
 `;
 
 const bioInputStyles = css`
   top: 35.85%;
   bottom: 58.73%;
   width: 190px;
+  border-color: #16231f;
+  border-radius: 8px;
 `;
 
 const fileButtonStyles = css`
-  border-radius: 4px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+
+  ::-webkit-file-upload-button {
+    background: #1bd290;
+    color: black;
+    margin-left: 0;
+    padding-top: 4px;
+    font-size: 18px;
+    border-radius: 4px;
+    width: 120px;
+    height: 30px;
+    outline: none;
+    cursor: pointer;
+    border: transparent;
+    /* display: none; */
+  }
 `;
 
 const uploadImageStyles = css`
-  border-radius: 4px;
+  border-radius: 8px;
   margin-left: 55px;
 `;
 
@@ -118,11 +159,14 @@ const textAreaStyles = css`
   width: 190px;
   border-radius: 4px;
   height: 50px;
+  border-color: #16231f;
+  border-radius: 8px;
 `;
 
 export const errorStyles = css`
   color: red;
   margin-top: 10px;
+  font-weight: bold;
 `;
 
 type Errors = { message: string }[];
@@ -273,8 +317,9 @@ export default function Register(props: Props) {
                 />
               </div>
               <br />
-              <div css={fileButtonStyles}>
+              <div>
                 <input
+                  css={fileButtonStyles}
                   type="file"
                   onChange={async (event) => {
                     await uploadImage(event);

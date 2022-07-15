@@ -42,7 +42,9 @@ export default async function uploadPostHandler(
       !req.body.postDescription ||
       !req.body.location
     ) {
-      res.status(401).json({ errors: [{ message: 'provide upload details' }] });
+      res
+        .status(401)
+        .json({ errors: [{ message: 'please provide upload details' }] });
       return;
     }
     const post = await createPost(

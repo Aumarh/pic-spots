@@ -27,8 +27,11 @@ const postContainerStyles = css`
   background: #eff8fc;
   gap: 300px;
   border-radius: 4px;
-
   justify-content: center;
+
+  img {
+    border-radius: 12px;
+  }
 `;
 
 const arrowStyles = css`
@@ -47,29 +50,6 @@ const pictureStyles = css`
   margin-left: 300px;
 `;
 
-const commentSectionStyles = css`
-  font-weight: bold;
-  display: block;
-  border-radius: 2px;
-  margin-top: 40px;
-  margin-left: 250px;
-  width: 600px;
-
-  padding: 20px;
-  box-shadow: 1px 3px 5px #3b3b3b;
-  button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-  }
-  textarea {
-    font-family: inter;
-    width: 450px;
-    margin-left: 30px;
-    margin-right: 30px;
-  }
-`;
-
 const pictureInfoStyles = css`
   button {
     background: transparent;
@@ -78,10 +58,10 @@ const pictureInfoStyles = css`
     justify-items: right;
   }
 
-  border-radius: 2px;
+  border-radius: 8px;
   margin-left: 250px;
   width: 587px;
-  height: 100px;
+  height: 80px;
   margin-top: 20px;
   /* margin: 30px 0px; */
   padding: 10px 20px 80px 30px;
@@ -93,6 +73,37 @@ const pictureInfoStyles = css`
   a {
     text-decoration: none;
     color: black;
+  }
+`;
+
+const commentSectionStyles = css`
+  font-weight: bold;
+  display: block;
+  border-radius: 8px;
+  margin-top: 40px;
+  margin-left: 250px;
+  width: 600px;
+  padding: 20px;
+  box-shadow: 1px 3px 5px #3b3b3b;
+
+  button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  textarea {
+    font-family: inter;
+    width: 450px;
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+
+  .comment {
+    margin-bottom: 10px;
+    p {
+      margin: auto 10px;
+    }
   }
 `;
 
@@ -179,11 +190,11 @@ export default function PostDetails(props: Props) {
               </div>
               {/* <div>{props.post.postTags}</div> */}
               <br />
-              <div>
+              {/* <div>
                 <Link href={`/users/${props.post.userId}`}>
-                  <a>posted by: @{props.user.username}</a>
+                  <a>posted by: @{props.post.username}</a>
                 </Link>
-              </div>
+              </div> */}
             </div>
 
             <div css={commentSectionStyles}>
@@ -235,7 +246,7 @@ export default function PostDetails(props: Props) {
               ) : (
                 newComment.map((event) => {
                   return (
-                    <div key={event.commentText}>
+                    <div key={event.commentText} className="comment">
                       <Stack direction="row" spacing={2}>
                         <Avatar
                           alt={event.username}

@@ -11,6 +11,7 @@ import PlacesAutocomplete, {
 import Layout from '../components/Layout';
 import { getUserByValidSessionToken } from '../util/database';
 import { UploadResponseBody } from './api/upload';
+import { errorStyles } from './login';
 
 const appNameStyles = css`
   font-family: 'Allura', cursive;
@@ -65,20 +66,31 @@ const uploadInfoStyles = css`
 `;
 
 const uploadTextareaStyles = css`
-  width: 250px;
+  width: 500px;
   height: 50px;
+  border-radius: 8px;
+  border-color: #a8c5f9;
 `;
 
 const spotNameStyles = css`
-  width: 250px;
+  width: 496px;
+  height: 26px;
+  border-radius: 8px;
+  border-color: #a8c5f9;
 `;
 
 const locationInputStyles = css`
-  width: 245px;
+  width: 497px;
+  height: 30px;
+  border-radius: 8px;
+  border-color: #a8c5f9;
 `;
 
 const tagSelectStyles = css`
-  width: 250px;
+  width: 504px;
+  height: 30px;
+  border-radius: 8px;
+  border-color: #a8c5f9;
 `;
 
 const uploadButtonStyles = css`
@@ -90,7 +102,6 @@ const uploadButtonStyles = css`
   border-radius: 4px;
   margin-top: 30px;
   font-size: 18px;
-
   border: transparent;
   cursor: pointer;
 `;
@@ -117,7 +128,7 @@ export default function Upload(props: Props) {
   const [lng, setLng] = useState(0);
   const [postTag, setPostTag] = useState('');
   const [errors, setErrors] = useState<Errors>([]);
-  const libraries = ['places'];
+  const libraries = ['places' as const];
 
   const router = useRouter();
 
@@ -264,7 +275,7 @@ export default function Upload(props: Props) {
                     <div>
                       <input
                         css={locationInputStyles}
-                        {...getInputProps({ placeholder: 'add address' })}
+                        {...getInputProps({ placeholder: 'add spot address' })}
                       />
 
                       <div>
@@ -313,6 +324,7 @@ export default function Upload(props: Props) {
                   onChange={(event) => setPostTag(event.currentTarget.value)}
                   css={tagSelectStyles}
                 >
+                  <option value="choose tag">choose tag</option>
                   <option value="outdoor">outdoor</option>
                   <option value="indoor">indoor</option>
                   <option value="daytime">daytime</option>
@@ -330,6 +342,11 @@ export default function Upload(props: Props) {
                 >
                   Upload
                 </button>
+                {errors.map((error) => (
+                  <div css={errorStyles} key={`error-${error.message}`}>
+                    {error.message}
+                  </div>
+                ))}
               </div>
             </div>
           </div>

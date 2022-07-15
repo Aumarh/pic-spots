@@ -51,7 +51,9 @@ const profileInfoStyles = css`
 `;
 
 const heroImageStyles = css`
-  border-radius: 2px;
+  img {
+    border-radius: 8px;
+  }
 `;
 
 type Props = {

@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Grid, Stack, Typography } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
+import { Typography } from '@mui/material';
+// import Avatar from '@mui/material/Avatar';
 import Head from 'next/head';
 import Link from 'next/link';
 import Layout from '../components/Layout';
@@ -23,22 +23,80 @@ const arrowStyles = css`
   }
 `;
 
+const communityContainerStyles = css`
+  /* display: flex; */
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    /* background: #eff8fc; */
+  }
+
+  p {
+    font-family: 'Allura', cursive;
+    font-size: 2rem;
+    /* font-weight: bold; */
+    text-align: center;
+    margin-bottom: 0px;
+  }
+
+  button {
+    /* text-decoration: none; */
+    color: black;
+    background: #a8c5f9;
+    text-align: center;
+    border-radius: 8px;
+    padding: 10px;
+    /* margin: 0 50px; */
+    margin-top: 4px;
+    margin-left: 10px;
+    margin-bottom: 40px;
+    font-size: 17px;
+    border: transparent;
+    cursor: pointer;
+    :hover {
+      background-color: #6b95e4;
+      box-shadow: #163923 0 -6px 8px inset;
+      transform: scale(1.125);
+    }
+  }
+
+  img {
+    border-radius: 12px;
+  }
+`;
+
 const userListStyles = css`
+  display: flex;
+  width: 80vw;
+  flex-wrap: wrap;
   margin-bottom: 30px;
+  justify-content: space-evenly;
+
+  .container {
+    background: #eff8fc;
+    border-radius: 8px;
+    width: 300px;
+    height: 320px;
+    margin: 20px;
+
+    align-items: center;
+  }
 
   a {
     text-decoration: none;
-    color: inherit;
+    color: black;
   }
 
-  a:hover {
-    text-decoration: underline;
+  :hover {
+    text-decoration: none;
   }
 `;
-// const userNameStyles = css``;
+// const buttonStyles = css`
+// `;
 
 type Props = {
-  users: User;
+  users: User[];
   username: string;
 };
 
@@ -62,29 +120,32 @@ export default function community(props: Props) {
             </Link>
           </Typography>
         </div>
-        <Grid>
-          <Stack spacing={3}>
-            <div>
+
+        <div css={communityContainerStyles}>
+          <div>
+            <div css={userListStyles}>
               {props.users.map((user) => {
                 return (
-                  <div css={userListStyles} key={`users-${user.id}`}>
-                    <Stack direction="row" spacing={2}>
-                      <Avatar
+                  <div key={`users-${user.id}`} className="container">
+                    <div>
+                      <img
                         alt={user.username}
                         src={user.heroImage}
-                        sx={{ width: 40, height: 40 }}
+                        style={{ height: '200px', width: '200px' }}
                       />
-                      <p>
-                        Spot of:{' '}
-                        <Link href={`/users/${user.id}`}>{user.username}</Link>
-                      </p>
-                    </Stack>
+                    </div>
+                    <div>
+                      <p>{user.username}'s Spot </p>
+                      <Link href={`/users/${user.id}`}>
+                        <button>Checkout more spots</button>
+                      </Link>
+                    </div>
                   </div>
                 );
               })}
             </div>
-          </Stack>
-        </Grid>
+          </div>
+        </div>
       </Layout>
     </div>
   );

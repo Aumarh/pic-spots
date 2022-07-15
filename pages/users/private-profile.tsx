@@ -42,10 +42,12 @@ const arrowStyles = css`
 `;
 
 const profileInfoStyles = css`
-  border-radius: 2px;
+  position: relative;
 
+  border-radius: 8px;
   width: 543px;
   height: 100px;
+  /* margin-top: -50px; */
   margin: 10px 0;
   padding: 10px 20px 80px 30px;
   box-shadow: 2px 5px 6px #3b3b3b;
@@ -54,17 +56,17 @@ const profileInfoStyles = css`
   flex-direction: column;
 `;
 
-const heroImageStyles = css``;
+const heroImageStyles = css`
+  img {
+    border-radius: 8px;
+  }
+`;
 
 type Props = {
   refreshUserProfile: () => void;
   user: User;
   userObject: { username: string };
   posts: Post[];
-  // post: Post;
-  // spotName: string;
-  // locationId: string;
-  // userId: number;
 };
 
 export default function PrivateProfile(props: Props) {

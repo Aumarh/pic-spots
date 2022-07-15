@@ -37,52 +37,91 @@ const loginBannerStyles = css`
 
 const usernameInputStyles = css`
   margin-top: 130px;
+  margin-left: 55px;
   left: 17.33%;
   right: 63.56%;
   top: 35.74%;
   bottom: 58.83%;
   width: 191px;
-
-  border-radius: 4px;
+  height: 30px;
+  border-color: #16231f;
+  border-radius: 8px;
   color: #000000;
 `;
+
 const passwordInputStyles = css`
   width: 191px;
+  height: 30px;
   margin-top: 20px;
-  left: 17.33%;
-
+  margin-left: 55px;
+  left: 15.61%;
   right: 63.56%;
   top: 44.7%;
   bottom: 49.87%;
   color: #000000;
-
-  border-radius: 4px;
+  border-color: #16231f;
+  border-radius: 8px;
 `;
 
 const createButtonStyles = css`
-  /* Button */
-
+  background-image: linear-gradient(144deg, #af40ff, #5c849f 50%, #1bd290);
+  border: 0;
+  box-shadow: rgba(30, 28, 31, 0.2) 0 15px 30px -5px;
+  box-sizing: border-box;
   position: absolute;
   left: 17.33%;
   right: 63.56%;
-  top: 70.37%;
+  top: 82.37%;
+  /* margin-top: 60px; */
   bottom: 24.21%;
   width: 200px;
-  background: #1bd290;
+  height: 40px;
+  /* background: #1bd290; */
   border-radius: 4px;
   color: #000000;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 18px;
+
+  :hover {
+    background-color: #1bd290;
+    box-shadow: #163923 0 -6px 8px inset;
+    transform: scale(1.125);
+  }
 `;
 
 const loginButtonStyles = css`
   position: absolute;
   left: 17.33%;
   right: 63.56%;
-  top: 52.95%;
+  top: 55.95%;
   bottom: 41.62%;
   width: 200px;
-  background: #1b64d2;
-  border-radius: 4px;
+
+  background-image: linear-gradient(144deg, #af40ff, #5049b5 50%, #1b64d2);
+  border: 0;
+  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+  box-sizing: border-box;
+  height: 40px;
+  /* background: #1b64d2; */
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  cursor: pointer;
+  border-radius: 8px;
   color: #000000;
+  font-size: 20px;
+
+  :hover {
+    background-color: #121b28;
+    box-shadow: #4e10ab 0 -6px 8px inset;
+    transform: scale(1.125);
+  }
 `;
 
 // const lineStyles = css`
@@ -97,10 +136,10 @@ const loginButtonStyles = css`
 //   border: 1px solid #000000;
 // `;
 
-const createAccountStyles = css`
+const createAccountTextStyles = css`
   color: #000000;
   margin-left: 55px;
-  margin-top: 125px;
+  margin-top: 140px;
   width: 200px;
   height: 18px;
   left: 283px;
@@ -114,7 +153,8 @@ const createAccountStyles = css`
 export const errorStyles = css`
   color: red;
   margin-top: 10px;
-  margin-left: 55px;
+  margin-left: 45px;
+  font-weight: bold;
 `;
 
 type Props = {
@@ -183,8 +223,8 @@ export default function Login(props: Props) {
         <div css={heroStyle}>
           <div css={loginBannerStyles}>
             <div>
-              <label>
-                username:{' '}
+              <div>
+                {/* Username: */}
                 <input
                   placeholder="username"
                   css={usernameInputStyles}
@@ -193,21 +233,21 @@ export default function Login(props: Props) {
                     setUsername(event.currentTarget.value);
                   }}
                 />
-              </label>
-              <label>
-                password:{' '}
+              </div>
+              <div>
+                {/* Password: */}
                 <input
                   type="password"
-                  placeholder="password"
-                  css={passwordInputStyles}
-                  value={password}
                   onChange={(event) => {
                     setPassword(event.currentTarget.value);
                   }}
+                  value={password}
+                  placeholder="password"
+                  css={passwordInputStyles}
                 />
-              </label>
+              </div>
               <button css={loginButtonStyles} onClick={() => loginHandler()}>
-                Login
+                Sign In
               </button>
               {errors.map((error) => (
                 <div css={errorStyles} key={`error-${error.message}`}>
@@ -215,7 +255,7 @@ export default function Login(props: Props) {
                 </div>
               ))}
             </div>
-            <p css={createAccountStyles}>Don't have an account yet?</p>
+            <p css={createAccountTextStyles}>Don't have an account yet?</p>
             <div>
               <Link href="/register">
                 <a>
