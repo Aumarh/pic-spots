@@ -19,9 +19,12 @@ export default async function commentsHandler(
   // console.log('this is comment', createComment);
 
   const commentId = Number(request.query.commentId);
+  console.log('this is comment Id', commentId);
   if (request.method === 'DELETE') {
-    const deletedComment = await deleteCommentById(commentId);
+    const deletedComment = await deleteCommentById(request.body.commentId);
+    console.log('this is deleted comment', deletedComment);
     response.status(201).json({ comment: deletedComment });
     return;
   }
+  response.status(405).json({ errors: 'Method not allowed' });
 }

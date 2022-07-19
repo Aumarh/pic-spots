@@ -2,6 +2,7 @@ module.exports = {
   presets: [
     [
       'next/babel',
+
       {
         'preset-react': {
           runtime: 'automatic',
@@ -10,5 +11,5 @@ module.exports = {
       },
     ],
   ],
-  plugins: ['@emotion/babel-plugin', 'superjson-next'],
+  plugins: ['@emotion/babel-plugin'],
 };

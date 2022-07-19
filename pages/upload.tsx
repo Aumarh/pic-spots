@@ -53,8 +53,10 @@ const uploadInputStyles = css`
     /* display: none; */
   }
 
-  /* :hover::before {
-    border: #779677 solid 4px;
+  /* :hover {
+    background-color: #a8c5f9;
+    box-shadow: #a8c5f9 0 -6px 8px inset;
+    transform: scale(1.125);
   } */
 `;
 
@@ -70,6 +72,8 @@ const uploadTextareaStyles = css`
   height: 50px;
   border-radius: 8px;
   border-color: #a8c5f9;
+  font-size: 1rem;
+  font-family: 'inter', sans-serif;
 `;
 
 const spotNameStyles = css`
@@ -77,6 +81,8 @@ const spotNameStyles = css`
   height: 26px;
   border-radius: 8px;
   border-color: #a8c5f9;
+  font-size: 1rem;
+  font-family: 'inter', sans-serif;
 `;
 
 const locationInputStyles = css`
@@ -84,6 +90,8 @@ const locationInputStyles = css`
   height: 30px;
   border-radius: 8px;
   border-color: #a8c5f9;
+  font-size: 1rem;
+  font-family: 'inter', sans-serif;
 `;
 
 const tagSelectStyles = css`
@@ -91,6 +99,8 @@ const tagSelectStyles = css`
   height: 30px;
   border-radius: 8px;
   border-color: #a8c5f9;
+  font-size: 1rem;
+  font-family: 'inter', sans-serif;
 `;
 
 const uploadButtonStyles = css`
@@ -104,6 +114,12 @@ const uploadButtonStyles = css`
   font-size: 18px;
   border: transparent;
   cursor: pointer;
+
+  :hover {
+    background-color: #a8c5f9;
+    box-shadow: #a8c5f9 0 -6px 8px inset;
+    transform: scale(1.125);
+  }
 `;
 
 type Props = {
@@ -286,7 +302,7 @@ export default function Upload(props: Props) {
                             backgroundColor: suggestion.active
                               ? '#a8c5f9'
                               : '#fff',
-                            width: '20em',
+                            width: '500px',
                             marginTop: 12,
                             marginBottom: 12,
                             paddingTop: 4,

@@ -62,7 +62,7 @@ export default function Home(props: Props) {
                           component="img"
                           image={post.pictureUrl}
                           title={post.spotName}
-                          height={400}
+                          // height={400}
                         />
                         <CardContent>
                           <Typography>Spot: {post.spotName}</Typography>

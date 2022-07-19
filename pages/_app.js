@@ -28,6 +28,7 @@ export default function App({ Component, pageProps }) {
         styles={css`
           body {
             margin: 0;
+            padding: 0;
           }
         `}
       />

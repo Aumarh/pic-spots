@@ -106,69 +106,71 @@ export default function PrivateProfile(props: Props) {
         </Head>
 
         <main>
-          {/* <h1 css={appNameStyles}>@{props.user.username}</h1> */}
-          <div css={heroImageStyles}>
-            <img
-              src={props.user.heroImage}
-              alt="hero pic"
-              style={{ height: '300px', width: '80vw' }}
-            />
-          </div>
-          <div css={appNameStyles}>
-            <div css={profileInfoStyles}>
-              <div>{props.user.username}'s spot!</div>
-              <div>bio: {props.user.bio}</div>
-            </div>
-          </div>
-          <div css={arrowStyles}>
-            <Typography>
-              <Link href="/">
-                <ArrowBackIcon />
-              </Link>
-            </Typography>
-          </div>
           <div>
-            <Grid container spacing={3}>
-              {props.posts.map((post) => {
-                console.log(post);
-                return (
-                  <Grid item md={4} key={`post-${post.id}`}>
-                    <Card>
-                      <Link href={`/posts/${post.id}`}>
-                        <CardActionArea>
-                          <CardMedia
-                            component="img"
-                            image={post.pictureUrl}
-                            title={post.spotName}
-                            height={400}
-                          />
-                          <CardContent>
-                            <Typography>Spot: {post.spotName}</Typography>
-                            <Typography>
-                              <LocationOnIcon /> {post.location}
-                            </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                      </Link>
-                      <CardActions>
-                        {/* {props.userId === props.post.userId && ( */}
-                        <Button
-                          onClick={() => {
-                            deletePostByPostId(post.id).catch(() => {});
-                          }}
-                          variant="outlined"
-                          size="small"
-                          color="primary"
-                        >
-                          <DeleteIcon />
-                        </Button>
-                        {/* )} */}
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                );
-              })}
-            </Grid>
+            {/* <h1 css={appNameStyles}>@{props.user.username}</h1> */}
+            <div css={heroImageStyles}>
+              <img
+                src={props.user.heroImage}
+                alt="hero pic"
+                style={{ height: '300px', width: '80vw' }}
+              />
+            </div>
+            <div css={appNameStyles}>
+              <div css={profileInfoStyles}>
+                <div>{props.user.username}'s spot!</div>
+                <div>bio: {props.user.bio}</div>
+              </div>
+            </div>
+            <div css={arrowStyles}>
+              <Typography>
+                <Link href="/">
+                  <ArrowBackIcon />
+                </Link>
+              </Typography>
+            </div>
+            <div>
+              <Grid container spacing={3}>
+                {props.posts.map((post) => {
+                  console.log(post);
+                  return (
+                    <Grid item md={4} key={`post-${post.id}`}>
+                      <Card>
+                        <Link href={`/posts/${post.id}`}>
+                          <CardActionArea>
+                            <CardMedia
+                              component="img"
+                              image={post.pictureUrl}
+                              title={post.spotName}
+                              height={400}
+                            />
+                            <CardContent>
+                              <Typography>Spot: {post.spotName}</Typography>
+                              <Typography>
+                                <LocationOnIcon /> {post.location}
+                              </Typography>
+                            </CardContent>
+                          </CardActionArea>
+                        </Link>
+                        <CardActions>
+                          {/* {props.userId === props.post.userId && ( */}
+                          <Button
+                            onClick={() => {
+                              deletePostByPostId(post.id).catch(() => {});
+                            }}
+                            variant="outlined"
+                            size="small"
+                            color="primary"
+                          >
+                            <DeleteIcon />
+                          </Button>
+                          {/* )} */}
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </div>
           </div>
         </main>
       </Layout>

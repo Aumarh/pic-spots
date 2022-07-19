@@ -7,6 +7,7 @@ import { RegisterResponseBody } from './api/register';
 
 const heroStyle = css`
   background: url('heroimage.jpeg');
+  /* background-color: red; */
   position: absolute;
   width: 100vw;
   height: 100vh;
@@ -23,9 +24,9 @@ const loginBannerStyles = css`
   border-radius: 8px;
   position: absolute;
   width: 320px;
-  height: 710px;
+  height: 720px;
   left: 207px;
-  top: 190px;
+  top: 35px;
   /* mix-blend-mode: screen; */
   background: #d9d9d9;
   mix-blend-mode: screen;
@@ -151,8 +152,11 @@ const fileButtonStyles = css`
 `;
 
 const uploadImageStyles = css`
-  border-radius: 8px;
   margin-left: 55px;
+
+  img {
+    border-radius: 10px;
+  }
 `;
 
 const textAreaStyles = css`

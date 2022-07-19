@@ -22,11 +22,18 @@ const navBarStyles = css`
     color: #0a0a0a;
     margin-left: 10px;
     text-decoration: none;
-    /* html,
-    body {
-      margin: 0;
-      padding: 0;
-    } */
+
+    /* float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px; */
+  }
+
+  Link.active {
+    background-color: #04aa6d;
   }
 `;
 const headerGrowStyles = css`
@@ -42,6 +49,17 @@ const headerGrowStyles = css`
   :hover {
     cursor: pointer;
   }
+  div {
+    /* background-color: yellow; */
+    padding: 6px;
+    display: none;
+  }
+
+  span:hover + p {
+    display: block;
+  }
+  .profileIcon {
+  }
 `;
 
 export default function Header(props) {
@@ -51,14 +69,17 @@ export default function Header(props) {
         <div css={headerGrowStyles}>
           <Link href="/">PicSpots</Link>
           <Link href="/users/private-profile">
-            <AccountCircleIcon {...(props.user && props.user.heroImage)} />
+            <AccountCircleIcon
+              {...(props.user && props.user.heroImage)}
+              className="profileIcon"
+            />
           </Link>
           <Link href="/community">
-            <PeopleIcon />
+            <PeopleIcon className="communityIcon" />
           </Link>
           <Link href="/upload">
             <Icon sx={{ fontSize: 30 }}>
-              <AddAPhotoIcon />
+              <AddAPhotoIcon className="photoIcon" />
             </Icon>
           </Link>
           <Link href="/logout">Sign out</Link>

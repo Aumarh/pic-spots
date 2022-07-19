@@ -67,6 +67,8 @@ export type Post = {
   spotName: string;
   postDescription: string;
   location: string;
+  latitude: number;
+  longitude: number;
   postTimestamp: Date;
   postTags: string;
 };

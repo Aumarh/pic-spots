@@ -51,6 +51,10 @@ const pictureStyles = css`
 `;
 
 const pictureInfoStyles = css`
+  div {
+    font-size: 1.1rem;
+    font-family: 'inter', sans-serif;
+  }
   button {
     background: transparent;
     border: transparent;
@@ -61,7 +65,7 @@ const pictureInfoStyles = css`
   border-radius: 8px;
   margin-left: 250px;
   width: 587px;
-  height: 80px;
+  height: 100px;
   margin-top: 20px;
   /* margin: 30px 0px; */
   padding: 10px 20px 80px 30px;
@@ -104,6 +108,15 @@ const commentSectionStyles = css`
     p {
       margin: auto 10px;
     }
+  }
+`;
+
+const spotLocationStyles = css`
+  cursor: pointer;
+  a:hover {
+    font-size: 1.5rem;
+
+    /* background-color: #7cb0e4; */
   }
 `;
 
@@ -185,8 +198,15 @@ export default function PostDetails(props: Props) {
               <br />
               <div>Description: {props.post.postDescription}</div>
               <br />
-              <div>
-                <LocationOnIcon /> {props.post.location}
+              <div css={spotLocationStyles}>
+                <a
+                  target="_blank"
+                  href={`http://maps.google.com/maps?daddr=${props.post.latitude},${props.post.longitude}&amp;ll=`}
+                  rel="noopener noreferrer"
+                  title="Take me there"
+                >
+                  <LocationOnIcon /> {props.post.location}
+                </a>
               </div>
               {/* <div>{props.post.postTags}</div> */}
               <br />

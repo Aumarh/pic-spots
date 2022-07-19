@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { getValidSessionByToken } from '../util/database';
 import { LoginResponseBody } from './api/login';
 
-const heroStyle = css`
+const heroStyles = css`
   background: url('heroimage.jpeg');
   position: absolute;
   width: 100vw;
@@ -33,6 +33,27 @@ const loginBannerStyles = css`
   background: #d9d9d9;
   mix-blend-mode: screen;
   border: 1px solid #000000;
+`;
+
+const headingStyles = css`
+  position: absolute;
+  color: #000000;
+  /* margin-left: 4px; */
+  margin-top: 200px;
+  width: 200px;
+  height: 18px;
+  left: 260px;
+
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 30px;
+  z-index: 1;
+  text-align: center;
+
+  h1 {
+    text-shadow: 1px 1px 1px #36cff2;
+  }
 `;
 
 const usernameInputStyles = css`
@@ -150,6 +171,8 @@ const createAccountTextStyles = css`
   line-height: 22px;
 `;
 
+// const aboutTextStyles = css``;
+
 export const errorStyles = css`
   color: red;
   margin-top: 10px;
@@ -215,12 +238,14 @@ export default function Login(props: Props) {
     <div>
       <Head>
         <title>Login</title>
-        <meta name="login" content="Login a new user" />
+        <meta name="login" content="Login a user" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <h1>Login</h1>
-        <div css={heroStyle}>
+        <div css={heroStyles}>
+          <div css={headingStyles}>
+            <h1>Pic Spots Community</h1>
+          </div>
           <div css={loginBannerStyles}>
             <div>
               <div>
@@ -262,6 +287,14 @@ export default function Login(props: Props) {
                   <button css={createButtonStyles}>Create new account</button>
                 </a>
               </Link>
+              {/* <div css={aboutTextStyles}>
+                <p>
+                  This project was developed by an UpLeveled student getting her
+                  hands dirty with code. Pic Spot is a social media web
+                  application where users can share picture perfects spots in
+                  Vienna. Join us and discover beautiful spots for your posts!
+                </p>
+              </div> */}
             </div>
           </div>
         </div>

@@ -77,7 +77,7 @@ const userListStyles = css`
     background: #eff8fc;
     border-radius: 8px;
     width: 300px;
-    height: 320px;
+    height: 323px;
     margin: 20px;
 
     align-items: center;
@@ -137,7 +137,7 @@ export default function community(props: Props) {
                     <div>
                       <p>{user.username}'s Spot </p>
                       <Link href={`/users/${user.id}`}>
-                        <button>Checkout more spots</button>
+                        <button>Discover spot</button>
                       </Link>
                     </div>
                   </div>
