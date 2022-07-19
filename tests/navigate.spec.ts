@@ -2,13 +2,6 @@ import { expect, test } from '@playwright/test';
 
 const baseUrl = 'http://localhost:3000/';
 
-// test('navigation test', async ({ page }) => {
-//
-
-//   await page.locator('text=private-profile').click();
-//   await expect(page.url()).toBe(`${baseUrl}users/private-profile`);
-// });
-
 test('page test', async ({ page }) => {
   await page.goto(baseUrl);
   const title = page.locator('h1');

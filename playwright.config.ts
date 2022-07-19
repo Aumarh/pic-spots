@@ -2,15 +2,21 @@
 import { devices, type PlaywrightTestConfig } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
-  forbidOnly: !!process.env.CI,
+  webServer: {
+    command: 'yarn start',
+    port: 3000,
+    reuseExistingServer: !process.env.CI,
+  },
+  /* Ignore Jest test files */
+  testIgnore: '**/util/__tests__/**',
   retries: process.env.CI ? 2 : 0,
+  reporter: process.env.CI ? 'list' : 'html',
   use: {
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
-  /* Ignore Jest test files */
-  testIgnore: '**/util/__tests__/**',
+
   projects: [
     {
       name: 'chromium',
@@ -20,10 +26,7 @@ const config: PlaywrightTestConfig = {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
     },
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
   ],
+  outputDir: 'test-results/',
 };
 export default config;
