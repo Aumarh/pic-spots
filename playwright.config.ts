@@ -6,6 +6,8 @@ const config: PlaywrightTestConfig = {
   retries: process.env.CI ? 2 : 0,
   use: {
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
   },
   /* Ignore Jest test files */
   testIgnore: '**/util/__tests__/**',
