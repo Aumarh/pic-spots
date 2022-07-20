@@ -1,34 +1,78 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## PicSpots - a social media platform for tourists who love top explore and capture picture perfect spots around Vienna.
 
-## Getting Started
+## Description
 
-First, run the development server:
+A web application where registered users can upload picture of beautiful spots around Vienna, add the spot name, a spot description to guide anyone visiting the spot, and the spot location which can be opened on the map to navigate users. Users are also able to leave comments on spots they fancy, view the spot community page and discover spots form other users.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## Technologies
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Next.js
+- Javascript / Typescript
+- Emotion/css
+- Material UI
+- PostgresSQL
+- Ley
+- dotenv-safe
+- Bcrypt
+- Cloudinary
+- GoogleAPI / Places Autocomplete
+- Figma
+- drawSQL
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## getting started
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+Clone the repo from GitHub and then install the dependencies:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+`git clone https://github.com/Aumarh/pic_spots cd pic_spots yarn`
 
-## Learn More
+Setup a database with postgres on your computer:
+`psql <login> CREATE DATABASE <database name>; CREATE USER <username> WITH ENCRYPTED PASSWORD '<pw>'; GRANT ALL PRIVILEGES ON DATABASE <database name> TO <user name>;`
 
-To learn more about Next.js, take a look at the following resources:
+Create a .env file with the userinfo for the database and create .env.example as a template file for userinfo
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Use migrations:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+`yarn migrate up`
 
-## Deploy on Vercel
+To delete data from database run:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`yarn migrate down`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+To run the development server:
+`yarn dev`
+
+Open http://localhost:3000 with your browser to see the result.
+
+## deployment
+
+To deploy this project, create a Heroku Account and follow the instructions
+
+## Figma Wireframe
+
+(https://www.figma.com/file/OEFA457H3RFqN0JSiGbRQp/Pic-Spots?node-id=0%3A1)
+
+## Database schema
+
+<img width="785" alt="image" src="https://drawsql.app/cyber-security-corner/diagrams/pic-spots#">
+
+## Preview
+
+### Home page
+
+![Screenshot of the home page](/public/screenshots/homepage.jpg 'This is the home page')
+
+### Single post page
+
+![Screenshot of the single post page](/public/screenshots/singlepostpage.jpg 'This is the single post page')
+
+### Profile page
+
+![Screenshot of the private-profile page](/public/screenshots/privateprofilepage.jpg 'This is the profile page')
+
+### Upload page
+
+![Screenshot of the upload page](/public/screenshots/uploadpage.jpg 'This is the upload page')
+
+### Community page
+
+![Screenshot of the community page](/public/screenshots/communitypage.jpg 'This is the community page')

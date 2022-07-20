@@ -165,6 +165,8 @@ const textAreaStyles = css`
   height: 50px;
   border-color: #16231f;
   border-radius: 8px;
+  font-family: inherit;
+  font-size: inherit;
 `;
 
 export const errorStyles = css`

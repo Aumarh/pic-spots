@@ -17,6 +17,10 @@ const appNameStyles = css`
 const arrowStyles = css`
   margin-right: 10px;
   margin-bottom: 15px;
+  background-color: #c4cccc;
+  width: 25px;
+  border-radius: 8px;
+  padding: 4px;
 
   :hover {
     cursor: pointer;

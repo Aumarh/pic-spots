@@ -36,6 +36,11 @@ const arrowStyles = css`
   margin-right: 10px;
   margin-bottom: 15px;
   margin-top: 15px;
+  background-color: #c4cccc;
+  width: 25px;
+  border-radius: 8px;
+  padding: 4px;
+
   :hover {
     cursor: pointer;
   }
@@ -46,7 +51,7 @@ const profileInfoStyles = css`
 
   border-radius: 8px;
   width: 543px;
-  height: 100px;
+  height: 112px;
   /* margin-top: -50px; */
   margin: 10px 0;
   padding: 10px 20px 80px 30px;

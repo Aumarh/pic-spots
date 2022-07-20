@@ -8,7 +8,7 @@ exports.up = async (sql) => {
 
 exports.down = async (sql) => {
   await sql`
-    ALTER TABLE sessions
+    ALTER TABLE posts
     DROP COLUMN latitude,
     DROP COLUMN longitude;
   `;

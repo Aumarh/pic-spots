@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 // import { css } from '@emotion/react';
 import {
@@ -23,6 +24,11 @@ import { getPosts, getUserByValidSessionToken, Post } from '../util/database';
 //   font-weight: bold;
 //   text-align: center;
 // `;
+
+const spotNameStyles = css`
+  font-style: italic;
+  font-size: 1.1rem;
+`;
 
 type Props = {
   refreshUserProfile: () => Promise<void>;
@@ -65,7 +71,10 @@ export default function Home(props: Props) {
                           // height={400}
                         />
                         <CardContent>
-                          <Typography>Spot: {post.spotName}</Typography>
+                          <Typography>
+                            <span css={spotNameStyles}>Spot:</span>{' '}
+                            {post.spotName}
+                          </Typography>
                           <Typography>
                             <LocationOnIcon /> {post.location}
                           </Typography>

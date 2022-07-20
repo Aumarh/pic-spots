@@ -37,6 +37,10 @@ const postContainerStyles = css`
 const arrowStyles = css`
   margin-right: 10px;
   margin-bottom: 15px;
+  background-color: #c4cccc;
+  width: 25px;
+  border-radius: 8px;
+  padding: 4px;
 
   :hover {
     cursor: pointer;
@@ -78,6 +82,11 @@ const pictureInfoStyles = css`
     text-decoration: none;
     color: black;
   }
+
+  span {
+    font-style: italic;
+    font-size: 1.1rem;
+  }
 `;
 
 const commentSectionStyles = css`
@@ -114,7 +123,7 @@ const commentSectionStyles = css`
 const spotLocationStyles = css`
   cursor: pointer;
   a:hover {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
 
     /* background-color: #7cb0e4; */
   }
@@ -194,9 +203,14 @@ export default function PostDetails(props: Props) {
             </div>
             <div css={pictureInfoStyles}>
               <br />
-              <div>Spot: {props.post.spotName}</div>
+              <div>
+                <span>Spot: </span> {props.post.spotName}
+              </div>
               <br />
-              <div>Description: {props.post.postDescription}</div>
+              <div>
+                <span>Description: </span>
+                {props.post.postDescription}
+              </div>
               <br />
               <div css={spotLocationStyles}>
                 <a

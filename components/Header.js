@@ -3,6 +3,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import PeopleIcon from '@mui/icons-material/People';
 import Icon from '@mui/material/Icon';
+import Head from 'next/head';
 import Link from 'next/link';
 
 const brandStyles = css`
@@ -14,6 +15,7 @@ const brandStyles = css`
     margin-right: 1rem;
   }
 `;
+
 const navBarStyles = css`
   /* background: #8ec6fa; */
   padding-top: 0.1rem;
@@ -36,12 +38,14 @@ const navBarStyles = css`
     background-color: #04aa6d;
   }
 `;
+
 const headerGrowStyles = css`
   flex-grow: 1;
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
   margin-bottom: 10px;
+  margin-right: 10px;
 
   a {
     margin-left: 10px;
@@ -49,40 +53,74 @@ const headerGrowStyles = css`
   :hover {
     cursor: pointer;
   }
-  div {
-    /* background-color: yellow; */
-    padding: 6px;
+
+  /* .hide {
     display: none;
   }
 
-  span:hover + p {
+  .myDiv:hover + .hide {
     display: block;
-  }
-  .profileIcon {
-  }
+  } */
+  /* div {
+    background-color: yellow;
+    padding: 6px;
+    display: none;
+  } */
+
+  /* .myDIV:hover + .hide {
+    display: block;
+  } */
+  /* a.active + span:hover {
+    display: inline-block;
+    text-overflow: initial;
+    width: auto;
+    overflow: hidden;
+    padding: 0 5px;
+    z-index: 2;
+  } */
 `;
 
 export default function Header(props) {
   return (
-    <div css={navBarStyles}>
-      <div position="static" css={brandStyles}>
-        <div css={headerGrowStyles}>
-          <Link href="/">PicSpots</Link>
-          <Link href="/users/private-profile">
-            <AccountCircleIcon
-              {...(props.user && props.user.heroImage)}
-              className="profileIcon"
-            />
-          </Link>
-          <Link href="/community">
-            <PeopleIcon className="communityIcon" />
-          </Link>
-          <Link href="/upload">
-            <Icon sx={{ fontSize: 30 }}>
-              <AddAPhotoIcon className="photoIcon" />
-            </Icon>
-          </Link>
-          <Link href="/logout">Sign out</Link>
+    <div>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      <div css={navBarStyles}>
+        <div position="static" css={brandStyles}>
+          <div css={headerGrowStyles}>
+            <div>
+              <Link href="/">PicSpots</Link>
+            </div>
+            <div>
+              <Link className="myDiv" href="/users/private-profile">
+                <a>
+                  <AccountCircleIcon
+                    {...(props.user && props.user.heroImage)}
+                  />
+                  {/* <span>profile</span> */}
+                </a>
+              </Link>
+            </div>
+            {/* <div className="hide">profile</div> */}
+            <div>
+              <Link className="myDiv" href="/community">
+                <PeopleIcon />
+              </Link>
+            </div>
+            {/* <div className="hide">community</div> */}
+            <div>
+              <Link className="myDiv" href="/upload">
+                <Icon sx={{ fontSize: 30 }}>
+                  <AddAPhotoIcon />
+                </Icon>
+              </Link>
+            </div>
+            {/* <div className="hide">upload</div> */}
+            <div>
+              <Link href="/logout">Sign out</Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>
