@@ -1,4 +1,4 @@
-## PicSpots - a social media platform for tourists who love top explore and capture picture perfect spots around Vienna.
+## PicSpots - a social media platform for tourists who love to explore and capture picture perfect spots around Vienna.
 
 ## Description
 
@@ -53,7 +53,7 @@ To deploy this project, create a Heroku Account and follow the instructions
 
 ## Database schema
 
-<img width="785" alt="image" src="https://drawsql.app/cyber-security-corner/diagrams/pic-spots#">
+(https://drawsql.app/cyber-security-corner/diagrams/pic-spots#)
 
 ## Preview
 
