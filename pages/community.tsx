@@ -28,12 +28,18 @@ const arrowStyles = css`
 `;
 
 const communityContainerStyles = css`
-  /* display: flex; */
+  align-items: center;
 
   .container {
     display: flex;
     flex-direction: column;
     /* background: #eff8fc; */
+  }
+
+  .container:hover {
+    background-color: #eff8fc;
+    box-shadow: #163923 0 -6px 8px inset;
+    transform: scale(1.125);
   }
 
   p {

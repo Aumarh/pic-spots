@@ -8,15 +8,17 @@ A web application where registered users can upload pictures of beautiful spots 
 
 - Next.js
 - Javascript / Typescript
-- Emotion/css
+- CSS / Emotion
 - Material UI
 - PostgresSQL
 - Ley
 - dotenv-safe
+- Cloudinary
+- Google API / Places Autocomplete
 - Bcrypt
 - CSRF Token
-- Cloudinary
-- GoogleAPI / Places Autocomplete
+- Jest for unit testing
+- Playwright for E2E testing
 - Figma
 - drawSQL
 

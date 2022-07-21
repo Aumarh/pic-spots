@@ -215,7 +215,7 @@ export default function PostDetails(props: Props) {
               <div css={spotLocationStyles}>
                 <a
                   target="_blank"
-                  href={`http://maps.google.com/maps?daddr=${props.post.latitude},${props.post.longitude}&amp;ll=`}
+                  href={`http://maps.google.com/maps?daddr=${48.2034895},${16.3878658}&amp;ll=`}
                   rel="noopener noreferrer"
                   title="Take me there"
                 >
