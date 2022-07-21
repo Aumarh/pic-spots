@@ -2,7 +2,7 @@
 
 ## Description
 
-A web application where registered users can upload picture of beautiful spots around Vienna, add the spot name, a spot description to guide anyone visiting the spot, and the spot location which can be opened on the map to navigate users. Users are also able to leave comments on spots they fancy, view the spot community page and discover spots form other users.
+A web application where registered users can upload pictures of beautiful spots around Vienna, add the spot name, a spot description to guide users visiting the spot, and the spot location which can be opened on the map to navigate users. Users are also able to leave comments on spots they fancy, view the spot community page and discover spots form other users.
 
 ## Technologies
 
@@ -14,12 +14,13 @@ A web application where registered users can upload picture of beautiful spots a
 - Ley
 - dotenv-safe
 - Bcrypt
+- CSRF Token
 - Cloudinary
 - GoogleAPI / Places Autocomplete
 - Figma
 - drawSQL
 
-## getting started
+## Getting started
 
 Clone the repo from GitHub and then install the dependencies:
 
