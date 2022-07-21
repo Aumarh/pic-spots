@@ -10,7 +10,7 @@ A web application where registered users can upload pictures of beautiful spots 
 - Javascript / Typescript
 - CSS / Emotion
 - Material UI
-- PostgresSQL
+- PostgreSQL
 - Ley
 - dotenv-safe
 - Cloudinary
