@@ -23,13 +23,13 @@ export default async function postHandler(
   if (request.method === 'DELETE') {
     const deletedPost = await deletePostByPostId(request.body.postId);
     console.log('this is deleted post', deletedPost);
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (!deletedPost) {
-      response.status(404).json({ errors: 'Post not found' });
-      return;
-    }
 
-    response.status(200).json({ post: deletedPost });
+    // if (!deletedPost) {
+    //   response.status(404).json({ errors: 'Post not found' });
+    //   return;
+    // }
+
+    response.status(200).json({ post: deletedPost as any });
     return;
   }
 
