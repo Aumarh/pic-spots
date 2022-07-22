@@ -9,6 +9,7 @@ import { LoginResponseBody } from './api/login';
 
 const heroStyles = css`
   background: url('heroimage.jpeg');
+
   position: absolute;
   width: 100vw;
   height: 100vh;
@@ -245,6 +246,7 @@ export default function Login(props: Props) {
         <div css={heroStyles}>
           <div css={headingStyles}>
             <h1>Pic Spots Community</h1>
+            {/* <p>test deploy</p> */}
           </div>
           <div css={loginBannerStyles}>
             <div>
