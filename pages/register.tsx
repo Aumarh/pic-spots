@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { RegisterResponseBody } from './api/register';
 
 const heroStyle = css`
-  background: url('heroimage.jpeg');
+  background: url('https://i.imgur.com/ZcpJB6i.jpg');
   /* background-color: red; */
   position: absolute;
   width: 100vw;

@@ -8,7 +8,7 @@ import { getValidSessionByToken } from '../util/database';
 import { LoginResponseBody } from './api/login';
 
 const heroStyles = css`
-  background: url('heroimage.jpeg');
+  background: url('https://i.imgur.com/ZcpJB6i.jpg');
 
   position: absolute;
   width: 100vw;
