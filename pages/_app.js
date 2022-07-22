@@ -29,6 +29,7 @@ export default function App({ Component, pageProps }) {
           body {
             margin: 0;
             padding: 0;
+            font-family: Allura, cursive;
           }
         `}
       />
