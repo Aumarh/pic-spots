@@ -47,7 +47,7 @@ const headingStyles = css`
 
   font-style: italic;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 24px;
   line-height: 30px;
   z-index: 1;
   text-align: center;
@@ -166,9 +166,11 @@ const createAccountTextStyles = css`
   height: 18px;
   left: 283px;
   top: 647px;
+  text-align: center;
   font-style: italic;
-  font-weight: 400;
-  font-size: 18px;
+  font-weight: 600;
+  font-family: Inter;
+  font-size: 15px;
   line-height: 22px;
 `;
 
@@ -177,8 +179,10 @@ const createAccountTextStyles = css`
 export const errorStyles = css`
   color: red;
   margin-top: 10px;
-  margin-left: 45px;
+  margin-left: 10px;
   font-weight: bold;
+  font-family: Inter;
+  text-align: center;
 `;
 
 type Props = {

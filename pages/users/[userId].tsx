@@ -39,6 +39,7 @@ const arrowStyles = css`
 
   :hover {
     cursor: pointer;
+    background-color: #b3b3b3;
   }
 `;
 

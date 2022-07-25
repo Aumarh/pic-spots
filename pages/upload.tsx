@@ -225,7 +225,6 @@ export default function Upload(props: Props) {
       <Layout userObject={props.userObject}>
         <Head>
           <title>Upload</title>
-
           <meta name="Pic_spots" content="Pic_spots" />
         </Head>
 

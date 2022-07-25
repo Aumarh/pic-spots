@@ -24,9 +24,10 @@ const loginBannerStyles = css`
   border-radius: 8px;
   position: absolute;
   width: 320px;
-  height: 720px;
+  height: 726px;
   left: 207px;
   top: 35px;
+  font-family: inter;
   /* mix-blend-mode: screen; */
   background: #d9d9d9;
   mix-blend-mode: screen;
@@ -37,10 +38,19 @@ const loginBannerStyles = css`
   }
 `;
 
+const headingStyles = css`
+  position: absolute;
+  color: #000000;
+  margin-top: 26px;
+  left: 300px;
+  z-index: 1;
+  text-align: center;
+  h1 {
+    text-shadow: 1px 1px 1px #36cff2;
+  }
+`;
+
 export const usernameInputStyles = css`
-  /* position: absolute; */
-  left: 17.33%;
-  right: 63.56%;
   top: 35.74%;
   bottom: 58.83%;
   width: 191px;
@@ -133,7 +143,7 @@ const bioInputStyles = css`
 
 const fileButtonStyles = css`
   border-radius: 8px;
-  margin-bottom: 30px;
+  margin-bottom: 2px;
 
   ::-webkit-file-upload-button {
     background: #1bd290;
@@ -156,6 +166,7 @@ const uploadImageStyles = css`
 
   img {
     border-radius: 10px;
+    margin-top: 0;
   }
 `;
 
@@ -173,6 +184,8 @@ export const errorStyles = css`
   color: red;
   margin-top: 10px;
   font-weight: bold;
+  text-align: center;
+  margin-right: 44px;
 `;
 
 type Errors = { message: string }[];
@@ -268,8 +281,10 @@ export default function Register(props: Props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <h1>register</h1>
         <div css={heroStyle}>
+          <div css={headingStyles}>
+            <h1>Register</h1>
+          </div>
           <div css={loginBannerStyles}>
             <div>
               <div>

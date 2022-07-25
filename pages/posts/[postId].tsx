@@ -29,6 +29,10 @@ const postContainerStyles = css`
   border-radius: 4px;
   justify-content: center;
 
+  /* @media (max-width: 768px) {
+    aspect-ratio: 1;
+  } */
+
   img {
     border-radius: 12px;
   }
@@ -44,6 +48,7 @@ const arrowStyles = css`
 
   :hover {
     cursor: pointer;
+    background-color: #b3b3b3;
   }
 `;
 
@@ -91,6 +96,7 @@ const pictureInfoStyles = css`
 
 const commentSectionStyles = css`
   font-weight: bold;
+  font-family: 'inter', sans-serif;
   display: block;
   border-radius: 8px;
   margin-top: 40px;
@@ -114,6 +120,7 @@ const commentSectionStyles = css`
 
   .comment {
     margin-bottom: 10px;
+
     p {
       margin: auto 10px;
     }
